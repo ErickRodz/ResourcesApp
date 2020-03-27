@@ -1,25 +1,24 @@
 from flask import jsonify
 from dao.resources import ResourcesDAO
 
+
 class ResourceHandler:
     def build_resource_dict(self, row):
-        result ={}
+        result = {}
         result['resourceid'] = row[0]
-        result['resourcename'] = row[1]
-        result['resourcetype'] = row[2]
-        result['resourcevendor'] = row[3]
-        result['resourcelocation'] = row[4]
-        result['resourceprice'] = row[5]
+        result['supplierid'] = row[1]
+        result['resourcename'] = row[2]
+        result['resourceprice'] = row[3]
+        result['resourcequantity'] = row[4]
         return result
 
-    def build_resource_attributes(self, resourceid, resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice):
+    def build_resource_attributes(self, resourceid, supplierid, resourcename, resourceprice, resourcequantity):
         result = {}
         result['resourceid'] = resourceid
+        result['supplierid'] = supplierid
         result['resourcename'] = resourcename
-        result['resourcetype'] = resourcetype
-        result['resourcevendor'] = resourcevendor
-        result['resourcelocation'] = resourcelocation
         result['resourceprice'] = resourceprice
+        result['resourcequantity'] = resourcequantity
         return result
 
     def getAllResources(self):
@@ -35,60 +34,92 @@ class ResourceHandler:
         dao = ResourcesDAO
         row = dao.getResourceById(resourceid)
         if not row:
-            return jsonify(Error = "Resource Not Found ") , 404
+            return jsonify(Error="Resource Not Found "), 404
         else:
             resource = self.build_resource_dict(row)
             return jsonify(Resource=resource)
 
     def searchResources(self, args):
-        #resourcename = args.get("resourcename") #dudoso
-        resourcetype = args.get("resourcetype")
-        resourcevendor = args.get("resourcevendor")
+        resourcename = args.get("resourcename")
+        supplierid = args.get("supplierid")
         dao = ResourcesDAO()
         resources_list = []
-        if(len(args) ==2) and resourcetype and resourcevendor:
-            resources_list = dao.getResourcesByTypeAndVendor( resourcetype, resourcevendor)
-        elif(len(args)==1) and resourcetype:
-            resources_list = dao.getResourcesByType(resourcetype)
-        elif(len(args)==1) and resourcevendor:
-            resources_list = dao.getResourcesByVendor(resourcevendor)
+        if (len(args) == 2) and resourcename and supplierid:
+            resources_list = dao.getResourcesByNameAndSupplier(resourcename, supplierid)
+        elif (len(args) == 1) and resourcename:
+            resources_list = dao.getResourcesByName(resourcename)
+        elif (len(args) == 1) and supplierid:
+            resources_list = dao.getResourcesBySupplier(supplierid)
         else:
-            return jsonify(Error = "Malformed query string"),400
-        result_list =[]
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
         for row in resources_list:
             result = self.build_resource_dict(row)
             result_list.append(result)
-        return jsonify(Resources = result_list)
+        return jsonify(Resources=result_list)
 
     def insertResource(self, form):
         print("form: ", form)
-        if len(form) !=5:
-            return jsonify(Error = "Malformed post request")
+        if len(form) != 4:
+            return jsonify(Error="Malformed post request")
+        supplierid = form['supplierid']
         resourcename = form['resourcename']
         resourceprice = form['resourceprice']
-        resourcetype = form['resourcetype']
-        resourcevendor = form['resurcevendor']
-        if resourcevendor and resourceprice and resourcetype and resourcename :
+        resourcequantity = form['resourcequantity']
+        if resourcename and resourceprice and resourcequantity and supplierid:
             dao = ResourcesDAO()
-            resourceid = dao.insert(resourcename, resourcetype, resourcevendor, resourceprice)
-            result = self.build_resource_attributes(resourceid, resourcename, resourcetype, resourcevendor, resourceprice)
+            resourceid = dao.insert(supplierid, resourcename, resourceprice, resourcequantity)
+            # supplierid = dao.getSupplierByResourceID(resourceid) #duda
+            result = self.build_resource_attributes(resourceid, supplierid, resourcename, resourceprice,
+                                                    resourcequantity)
             return jsonify(Resource=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertResourceJson(self, json):
+        supplierid = json['supplierid']
         resourcename = json['resourcename']
         resourceprice = json['resourceprice']
-        resourcetype = json['resourcetype']
-        resourcevendor = json['resourcevendor']
-        if resourcetype and resourceprice and resourcevendor and resourcename:
+        resourcequantity = json['resourcequantity']
+        if resourceprice and resourcequantity and resourcename and supplierid:
             dao = ResourcesDAO()
-            resourceid = dao.insert(resourcename, resourcetype, resourcevendor, resourceprice)
-            result = self.build_resource_attributes(resourceid, resourcename, resourcetype, resourcevendor, resourceprice)
-            return jsonify(Resources=result),201
+            resourceid = dao.insert(supplierid, resourcename, resourceprice, resourcequantity)
+            # supplierid = dao.getSupplierByResourceID(resourceid) #duda
+            result = self.build_resource_attributes(resourceid, supplierid, resourcename, resourceprice,
+                                                    resourcequantity)
+            return jsonify(Resources=result), 201
         else:
-            return jsonify(Error = "Unexpected attributes in post request")
-        
+            return jsonify(Error="Unexpected attributes in post request")
+
+    def deleteResource(self, resourceid):
+        dao = ResourcesDAO()
+        if not dao.getResourceById(resourceid):
+            return jsonify(Error="Resource not found."), 404
+        else:
+            dao.delete(resourceid)
+            return jsonify(DeleteStatus="OK"), 200
+
+    def updateResource(self, resourceid, form):
+        dao = ResourcesDAO()
+        if not dao.getResourceById(resourceid):
+            return jsonify(Error="Resource not found."), 404
+        else:
+            if len(form) != 4:
+                return jsonify(Error="Malformed update request")
+            else:
+                supplierid = form['supplierid']
+                resourcename = form['resourcename']
+                resourceprice = form['resourceprice']
+                resourcequantity = form['resourcequantity']
+                if supplierid and resourcename and resourceprice and resourcequantity:
+                    dao.update(resourceid, supplierid, resourcename, resourceprice, resourcequantity)
+                    result = self.build_resource_attributes(resourceid, supplierid, resourcename, resourceprice,
+                                                            resourcequantity)
+                    return jsonify(Resource=result), 400
+                else:
+                    return jsonify(Error="Unexpected attributes in update request"), 400
+
+
 
 
 

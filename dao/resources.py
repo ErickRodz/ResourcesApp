@@ -2,14 +2,13 @@ from config.dbconfig import pg_config
 import psycopg2
 
 class ResourcesDAO:
-    def _init_(self):
-        connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
-
+    def __init__(self):
+        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
         self.conn = psycopg2.connect(connection_url)
 
     def getAllResources(self):
         cursor = self.conn.cursor()
-        query = "select resourceid, resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice from Resources;"
+        query = "select resourceid, supplierid, resourcename, resourceprice, resourcequantity from Resources;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -18,41 +17,49 @@ class ResourcesDAO:
 
     def getResourceById(self, resourceid):
         cursor = self.conn.cursor()
-        query = "select resourceid, resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice from Resources where resourceid = %s;"
+        query = "select resourceid, supplierid, resourcename, resourceprice, resourcequantity, from Resources1 where resourceid = %s;"
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result
 
-    def getResourcesByType(self, resourcetype):
+    def getResourcesBySupplier(self, supplierid):
         cursor = self.conn.cursor()
-        query = "select * from Resources where resourcetype = %s;"
-        cursor.execute(query, (resourcetype,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-    def getResourcesByVendor(self, resourcevendor):
-        cursor = self.conn.cursor()
-        query = "select * from Resources where resourcevendor = %s;"
-        cursor.execute(query, (resourcevendor,))
+        query = "select * from Resources where supplierid = %s;"
+        cursor.execute(query, (supplierid,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def getResourcesByTypeAndVendor(self, resourcetype, resourcevendor):
+    def getSupplierByResourceID(self, resourceid):
         cursor = self.conn.cursor()
-        query = "select * from Resources where resourcetype = %s and resourcevendor = %s"
-        cursor.execute(query, (resourcetype, resourcevendor))
+        query = "select supplierid from Resources where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
+    def getResourcesByName(self, resourcename):
+        cursor = self.conn.cursor()
+        query = "select * from Resources where resourcename = %s;"
+        cursor.execute(query, (resourcename,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def insert(self,resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice):
+    def getResourcesByNameAndSupplier(self, resourcename, supplierid):
         cursor = self.conn.cursor()
-        query = "insert into Resources(resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice) values (%s, %s, %s, %s, %s) returning resourceid;"
-        cursor.execute(query, (resourcename, resourcetype, resourcevendor,resourcelocation, resourceprice,))
+        query = "select * from Resources where resourcename = %s and supplierid = %s"
+        cursor.execute(query, (resourcename, supplierid,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def insert(self, supplierid, resourcename, resourceprice, resourcequantity):
+        cursor = self.conn.cursor()
+        query = "insert into Resources(supplierid, resourcename, resourceprice, resourcequantity) values (%s, %s, %s, %s) returning resourceid;"
+        cursor.execute(query, (supplierid, resourcename, resourceprice, resourcequantity,))
         resourceid = cursor.fetchone()[0]
         self.conn.commit()
         return resourceid
@@ -64,13 +71,12 @@ class ResourcesDAO:
         self.conn.commit()
         return resourceid
 
-    def update(self, resourceid, resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice):
+    def update(self, resourceid, supplierid, resourcename, resourceprice, resourcequantity):
         cursor = self.conn.cursor()
-        query = "update Resources set resourcename = %s, resourcetype = %s, resourcevendor = %s, resourcelocation = %s, resourceprice = %s where resourceid = %s;"
-        cursor.execute(query, (resourcename, resourcetype, resourcevendor, resourcelocation, resourceprice, resourceid,))
+        query = "update Resources set resourcename = %s, resourceprice = %s, resourcequantity = %s where resourceid = %s and supplierid = %s;"
+        cursor.execute(query, (resourcename, resourceprice, resourcequantity, resourceid, supplierid,))
         self.conn.commit()
         return resourceid
-
 
 
 
