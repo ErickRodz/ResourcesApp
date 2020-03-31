@@ -2,7 +2,7 @@
 
 
 pg_config = {
-    'user' : 'resourceusers',
-    'passwd' : 'SaberCole95843',
-    'dbname' : 'resourcedb'
+    'user' : 'argent',
+    'passwd' : '7676',
+    'dbname' : 'RSAppDB'
 }

@@ -5,7 +5,7 @@ from dao.administrators import AdministratorsDAO
 class AdministratorsHandler:
     def build_administrators_dict(self, row):
         result = {}
-        result['AdministratorID'] = row[0]
+        result['AdminID'] = row[0]
         result['UserName'] = row[1]
         result['Password'] = row[2]
         result['Email'] = row[3]
@@ -17,7 +17,7 @@ class AdministratorsHandler:
 
     def build_administrators_attributes(self, AdministratorID, UserName, Password, Email, FirstName, LastName, DateofBirth, Gender):
         result = {}
-        result['AdministratorID'] = AdministratorID
+        result['AdminID'] = AdministratorID
         result['UserName'] = UserName
         result['Password'] = Password
         result['Email'] = Email
@@ -29,9 +29,9 @@ class AdministratorsHandler:
 
     def getAllAdministrators(self):
         dao = AdministratorsDAO()
-        users_list = dao.getAllAdministrators()
+        admin_list = dao.getAllAdministrators()
         result_list = []
-        for row in users_list:
+        for row in admin_list:
             result = self.build_administrators_dict(row)
             result_list.append(result)
         return jsonify(Administrators=result_list)
@@ -67,7 +67,7 @@ class AdministratorsHandler:
 
     def insertAdministrator(self, form):
         print("form: ", form)
-        if len(form) != 4:
+        if len(form) != 7:
             return jsonify(Error = "Malformed post request"), 400
         else:
             username = form['UserName']
@@ -77,9 +77,9 @@ class AdministratorsHandler:
             lastname = form['LastName']
             dateofbirth = form['DateofBirth']
             gender = form['Gender']
-            if  username and password and email and firstname and lastname and dateofbirth and gender:
+            if username and password and email and firstname and lastname and dateofbirth and gender:
                 dao = AdministratorsDAO()
-                administratorid = dao.insert(username, password, email, firstname, lastname, dateofbirth,gender)
+                administratorid = dao.insert(username, password, email, firstname, lastname, dateofbirth, gender)
                 result = self.build_administrators_attributes(administratorid, username, password, email, firstname, lastname, dateofbirth,gender)
                 return jsonify(Administrators=result), 201
             else:
@@ -93,10 +93,10 @@ class AdministratorsHandler:
         lastname = json['LastName']
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
-        if  username and password and email and firstname and lastname and dateofbirth and gender:
+        if username and password and email and firstname and lastname and dateofbirth and gender:
             dao = AdministratorsDAO()
-            administratorid = dao.insert(username, password, email, firstname, lastname, dateofbirth,gender)
-            result = self.build_administrators_attributes(administratorid, username, password, email, firstname, lastname, dateofbirth,gender)
+            administratorid = dao.insert(username, password, email, firstname, lastname, dateofbirth, gender)
+            result = self.build_administrators_attributes(administratorid, username, password, email, firstname, lastname, dateofbirth, gender)
             return jsonify(Administrators=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
@@ -114,7 +114,7 @@ class AdministratorsHandler:
         if not dao.getAdministratorById(administratorid):
             return jsonify(Error = "Admin not found."), 404
         else:
-            if len(form) != 4:
+            if len(form) != 7:
                 return jsonify(Error="Malformed update request"), 400
             else:
                 username = form['UserName']
@@ -126,7 +126,24 @@ class AdministratorsHandler:
                 gender = form['Gender']
                 if username and password and email and firstname and lastname and dateofbirth and gender:
                     dao.update(username, password, email, firstname, lastname, dateofbirth, gender)
-                    result = self.build_users_attributes(username, password, email, firstname, lastname, dateofbirth, gender)
-                    return jsonify(Users=result), 200
+                    result = self.build_administrators_attributes(username, password, email, firstname, lastname, dateofbirth, gender)
+                    return jsonify(Administrators=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
+
+    def updateAdministratorJson(self, adminid, json):
+        dao = AdministratorsDAO()
+        if not dao.getAdministratorById(adminid):
+            return jsonify(Error="Admin not found."), 404
+        else:
+            username = json['UserName']
+            password = json['Password']
+            email = json['Email']
+            firstname = json['FirstName']
+            lastname = json['LastName']
+            dateofbirth = json['DateofBirth']
+            gender = json['Gender']
+            if username and password and email and firstname and lastname and dateofbirth and gender:
+                dao.update(adminid, username, password, email, firstname, lastname, dateofbirth, gender)
+                result = self.build_administrators_attributes(adminid, username, password, email, firstname, lastname, dateofbirth, gender)
+                return jsonify(Administrators=result), 200

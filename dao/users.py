@@ -17,7 +17,7 @@ class UsersDAO:
 
     def getUserById(self, UserID):
         cursor = self.conn.cursor()
-        query = "select * from Users; where userid = %s;"
+        query = "select * from Users Where userid = %s;"
         cursor.execute(query, (UserID,))
         result = cursor.fetchone()
         return result
@@ -58,10 +58,10 @@ class UsersDAO:
 
 
 
-    def insert(self, UserName, Password, Email, FirstName, LastName, DateofBirth,Gender):
+    def insert(self, UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender):
         cursor = self.conn.cursor()
-        query = "insert into Users( username, password, email, firstname, lastname, dateofbirth, gender) values (%s, %s, %s, %s) returning userid;"
-        cursor.execute(query, (UserName, Password, Email, FirstName, LastName, DateofBirth,Gender,))
+        query = "insert into Users( username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender) values (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning userid;"
+        cursor.execute(query, (UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender,))
         userid = cursor.fetchone()[0]
         self.conn.commit()
         return userid

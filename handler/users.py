@@ -70,7 +70,7 @@ class UsersHandler:
         elif (len(args) == 1) and username:
             users_list = dao.getUserbyUsername(username)
         elif (len(args) == 1) and email:
-            users_list = dao.getUserByEmail(email)
+            users_list = dao.getUserbyEmail(email)
         elif (len(args) == 1) and ulocation:
             users_list = dao.getUserByLocation(ulocation)
         else:
@@ -83,20 +83,22 @@ class UsersHandler:
 
     def insertUser(self, form):
         print("form: ", form)
-        if len(form) != 4:
+        if len(form) != 9:
             return jsonify(Error = "Malformed post request"), 400
         else:
             username = form['UserName']
             password = form['Password']
             email = form['Email']
+            paymentmethod = form['PaymentMethod']
+            ulocation = form['ULocation']
             firstname = form['FirstName']
             lastname = form['LastName']
             dateofbirth = form['DateofBirth']
             gender = form['Gender']
-            if  username and password and email and firstname and lastname and dateofbirth and gender:
+            if  username and password and email and paymentmethod and ulocation and firstname and lastname and dateofbirth and gender:
                 dao = UsersDAO()
-                userid = dao.insert(username, password, email, firstname, lastname, dateofbirth,gender)
-                result = self.build_users_attributes(userid, username, password, email, firstname, lastname, dateofbirth,gender)
+                userid = dao.insert(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
+                result = self.build_users_attributes(userid, username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
                 return jsonify(Users=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -105,14 +107,16 @@ class UsersHandler:
         username = json['UserName']
         password = json['Password']
         email = json['Email']
+        paymentmethod = json['PaymentMethod']
+        ulocation = json['ULocation']
         firstname = json['FirstName']
         lastname = json['LastName']
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
-        if  username and password and email and firstname and lastname and dateofbirth and gender:
+        if  username and password and email and paymentmethod and ulocation and firstname and lastname and dateofbirth and gender:
             dao = UsersDAO()
-            userid = dao.insert(username, password, email, firstname, lastname, dateofbirth,gender)
-            result = self.build_users_attributes(username, password, email, firstname, lastname, dateofbirth,gender)
+            userid = dao.insert(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth,gender)
+            result = self.build_users_attributes(userid,username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth,gender)
             return jsonify(Users=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
