@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
+
+from handler.purchaselog import PurchaseLogHandler
 from handler.resources import ResourceHandler
 from handler.suppliers import SuppliersHandler
 from handler.users import UsersHandler
 from handler.administrators import AdministratorsHandler
+from handler.attributes import AttributeHandler
+from handler.reservationlog import  ReservationLogHandler
 from flask_cors import CORS, cross_origin
 
 # Activate
@@ -20,31 +24,23 @@ def greeting():
 @app.route('/ProyectoDB/users', methods=['GET', 'POST'])
 def getAllUsers():
     if request.method == 'POST':
-        #No poseido por Satanas. At least, for now.
-        #Commented the working stuff for phase 1
-       # print("REQUEST: ", request.json)
-       # return UsersHandler().insertUserJson(request.json)
-        return 'Accessing Users POST Method'
+        print("REQUEST: ", request.json)
+        return UsersHandler().insertUserJson(request.json)
     else:
         if not request.args:
-            #return UsersHandler().getAllUsers()
-            return 'Accessing GET All Users Method'
+            return UsersHandler().getAllUsers()
         else:
-            #return UsersHandler().searchUsers(request.args)
-            return 'Accessing Search Users Method'
+            return UsersHandler().searchUsers(request.args)
 
 
 @app.route('/ProyectoDB/users/<int:userid>', methods=['GET', 'PUT', 'DELETE'])
 def getUserById(userid):
     if request.method == 'GET':
-       # return UsersHandler().getUserById(userid)
-       return 'Accessing the GET Users By Id Method'
+        return UsersHandler().getUserById(userid)
     elif request.method == 'PUT':
-       # return UsersHandler().updateUser(userid, request.form)
-        return 'Accessing the PUT Method in Users'
+        return UsersHandler().updateUser(userid, request.form)
     elif request.method == 'DELETE':
-       # return UsersHandler().deleteUser(userid)
-        return 'Accessing the DELETE Method in Users'
+        return UsersHandler().deleteUser(userid)
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -52,59 +48,49 @@ def getUserById(userid):
 @app.route('/ProyectoDB/suppliers', methods=['GET', 'POST'])
 def getAllSuppliers():
     if request.method == 'POST':
-        #return SuppliersHandler().insertSupplierJson(request.json)
-        return 'Accessing the POST Suppliers Method '
-    else :
+        return SuppliersHandler().insertSupplierJson(request.json)
+    else:
         if not request.args:
-            #return SuppliersHandler().getAllSuppliers()
-            return 'Accessing the GET all Suppliers Method'
+            return SuppliersHandler().getAllSuppliers()
         else:
             return SuppliersHandler().searchSuppliers(request.args)
+
 
 @app.route('/ProyectoDB/suppliers/<int:supplierid>',
            methods=['GET', 'PUT', 'DELETE'])
 def getSupplierById(supplierid):
     if request.method == 'GET':
-        #return SuppliersHandler().getSupplierById(supplierid)
-        return 'Accessing the GET Suppliers by Id Method'
+         return SuppliersHandler().getSupplierById(supplierid)
     elif request.method == 'PUT':
-        #pass
-        return 'Accessing the PUT Suppliers Method'
+         pass
     elif request.method == 'DELETE':
-        #pass
-        return 'Accessing the DELETE Suppliers Method'
+         pass
     else:
-        return jsonify(Error = "Method not allowed"), 405
+        return jsonify(Error="Method not allowed"), 405
 
 
 @app.route('/ProyectoDB/administrator', methods=['GET', 'POST'])
 def getAllAdministrators():
-        if request.method == 'POST':
-            # No poseido por Satanas. At least, for now.
-            # Testing still neccesarry
-            print("REQUEST: ", request.json)
-            #return AdministratorsHandler().insertAdministratorJson(request.json)
-            return 'Accessing the PUT Administrators Method'
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return AdministratorsHandler().insertAdministratorJson(request.json)
+    else:
+        if not request.args:
+            return AdministratorsHandler().getAllAdministrators()
         else:
-            if not request.args:
-                #return AdministratorsHandler().getAllAdministrators()
-                return 'Accessing the GET all administrators Method'
-            else:
-                return AdministratorsHandler().searchAdministrators(request.args)
+            return AdministratorsHandler().searchAdministrators(request.args)
+
 
 @app.route('/ProyectoDB/administrator/<int:administratorid>', methods=['GET', 'PUT', 'DELETE'])
 def getAdministratorsbyId(administratorid):
-        if request.method == 'GET':
-            #return AdministratorsHandler().getAdministratorById(administratorid)
-            return 'Accessing the GET Administrators by Id Method'
-        elif request.method == 'PUT':
-            #return AdministratorsHandler().updateAdministrator(administratorid, request.form)
-            return 'Accessing the PUT Administrators Method'
-        elif request.method == 'DELETE':
-            #return AdministratorsHandler().deleteAdministrator(administratorid)
-            return 'Accessing the DELETE Administrators Method'
-        else:
-            return jsonify(Error="Method not allowed."), 405
+    if request.method == 'GET':
+        return AdministratorsHandler().getAdministratorById(administratorid)
+    elif request.method == 'PUT':
+        return AdministratorsHandler().updateAdministrator(administratorid, request.form)
+    elif request.method == 'DELETE':
+        return AdministratorsHandler().deleteAdministrator(administratorid)
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 
 @app.route('/ProyectoDB/resources', methods=['GET', 'POST'])
@@ -114,122 +100,103 @@ def getAllResources():
         # parece q estaba poseido por satanas ...
         # DEBUG a ver q trae el json q manda el cliente con la nueva pieza
         print("REQUEST: ", request.json)
-        #return ResourceHandler().insertResourceJson(request.json)
-        return 'Accessing Resources POST Method'
+        return ResourceHandler().insertResourceJson(request.json)
     else:
         if not request.args:
-            #return ResourceHandler().getAllResources()
-            return 'Accessing GET all Resources Method'
+            return ResourceHandler().getAllResources()
         else:
-            #return ResourceHandler().searchResources(request.args)
-            return 'Accesing Search Resources Method'
+            return ResourceHandler().searchResources(request.args)
+
 
 @app.route('/ProyectoDB/resources/<int:resourceid>', methods=['GET', 'PUT', 'DELETE'])
 def getResourceById(resourceid):
     if request.method == 'GET':
-       # return ResourceHandler().getResourceByID(resourceid)
-         return 'Accessing the GET Resources by Id Method'
+        return ResourceHandler().getResourceByID(resourceid)
     elif request.method == 'PUT':
-        #return ResourceHandler().updateResource(resourceid, request.form)
-        return 'Accesing the PUT Method in Resources'
+        return ResourceHandler().updateResource(resourceid, request.form)
     elif request.method == 'DELETE':
-        #return ResourceHandler().deletResource(resourceid)
-        return 'Accesing the DELETE Resources Method'
+        return ResourceHandler().deletResource(resourceid)
 
     else:
 
         return jsonify(Error="Method not allowed."), 405
 
+
 @app.route('/ProyectoDB/usercart', methods=['GET', 'POST'])
 def getAllCarts():
     if request.method == 'POST':
-        #No poseido por Satanas. At least, for now.
-        #Commented the working stuff for phase 1
-       # print("REQUEST: ", request.json)
-       # return UsersHandler().insertUserJson(request.json)
-        return 'Accessing Userscart POST Method'
+        # No poseido por Satanas. At least, for now.
+        # Commented the working stuff for phase 1
+        print("REQUEST: ", request.json)
+        return UsersHandler().insertUserJson(request.json)
     else:
         if not request.args:
-            #return UsersHandler().getAllUsers()
-            return 'Accessing GET All Carts Method'
+            return UsersHandler().getAllUsers()
         else:
-            #return UsersHandler().searchUsers(request.args)
-            return 'Accessing Search Carts Method'
+            return UsersHandler().searchUsers(request.args)
 
 
 @app.route('/ProyectoDB/usercart/<int:cartid>', methods=['GET', 'PUT', 'DELETE'])
 def getCartById(cartid):
     if request.method == 'GET':
-       # return UsersHandler().getUserById(userid)
-       return 'Accessing the GET Cart By Id Method'
+        return UsersHandler().getUserById(cartid)
     elif request.method == 'PUT':
-       # return UsersHandler().updateUser(userid, request.form)
-        return 'Accessing the PUT Method in Carts'
+        return UsersHandler().updateUser(cartid, request.form)
     elif request.method == 'DELETE':
-       # return UsersHandler().deleteUser(userid)
-        return 'Accessing the DELETE Method in Carts'
+        return UsersHandler().deleteUser(cartid)
     else:
         return jsonify(Error="Method not allowed."), 405
-#Must make a new class or method that searches the Carts by UserID for obvious reasons.
 
 
-@app.route('/ProyectoDB/attributes/<int:attributeid>', methods=['GET', 'PUT','DELETE'])
+# Must make a new class or method that searches the Carts by UserID for obvious reasons.
+
+
+@app.route('/ProyectoDB/attributes/<int:attributeid>', methods=['GET', 'PUT', 'DELETE'])
 def getAttributesById(attributeid):
     if request.method == 'GET':
-        #return AttributeHandler().getAttributeByID(attributeid)
-        return 'Accessing the GET Attributes by Id Method'
+        return AttributeHandler().getAttributeByID(attributeid)
     elif request.method == 'PUT':
-        #return AttributeHandler().updateAttribute(attributeid, request.form)
-        return 'Accessing the PUT Attributes Method'
+        return AttributeHandler().updateAttribute(attributeid, request.form)
     elif request.method == 'DELETE':
-        #return AttributeHandler().deleteAttribute(attributeid)
-        return 'Accessing the DELETE Attributes Method'
+        return AttributeHandler().deleteAttribute(attributeid)
+
 
 @app.route('/ProyectoDB/attributes', methods=['GET', 'POST'])
 def getAllAttributes():
-        if request.method == 'POST':
-            # No poseido por Satanas. At least, for now.
-            # Testing still neccesarry
-            print("REQUEST: ", request.json)
-            #return AttributeHandler().insertAttributeJson(request.json)
-            return 'Accessing the POST Attributes Method'
+    if request.method == 'POST':
+        # No poseido por Satanas. At least, for now.
+        # Testing still neccesarry
+        print("REQUEST: ", request.json)
+        return AttributeHandler().insertAttributeJson(request.json)
+    else:
+        if not request.args:
+            pass
         else:
-            if not request.args:
-                #pass
-                 return 'Accessing the GET all Attributes Method'
-            else:
-                #return AttributeHandler().searchAttributes(request.args)
-                 return 'Accessing the Search Attributes Method'
+            return AttributeHandler().searchAttributes(request.args)
 
 
 @app.route('/ProyectoDB/reservationlog', methods=['GET', 'POST'])
 def getAllReservations():
     if request.method == 'POST':
-        #No poseido por Satanas. At least, for now.
-        #Commented the working stuff for phase 1
-       # print("REQUEST: ", request.json)
-       # return ReservationLogHandler().insertReservationLogJson(request.json)
-        return 'Accessing ReservationLog POST Method'
+        # No poseido por Satanas. At least, for now.
+        # Commented the working stuff for phase 1
+        print("REQUEST: ", request.json)
+        return ReservationLogHandler().insertReservationLogJson(request.json)
     else:
         if not request.args:
-            #return ReservationLogHandler().getAllReservationLogs()
-            return 'Accessing GET All ReservationLog Method'
+            return ReservationLogHandler().getAllReservationLogs()
         else:
-            #return ReservationLogHandler().searchReservationLogs(request.args)
-            return 'Accessing Search ReservationLog Method'
+            return ReservationLogHandler().searchReservationLogs(request.args)
 
 
 @app.route('/ProyectoDB/reservationlog/<int:reservationid>', methods=['GET', 'PUT', 'DELETE'])
 def getReservationById(reservationid):
     if request.method == 'GET':
-       # return ReservationLogHandler().getReservationLogById(reservationid)
-       return 'Accessing the GET ReservationLog By Id Method'
+        return ReservationLogHandler().getReservationLogById(reservationid)
     elif request.method == 'PUT':
-       # return ReservationLogHandler().updateReservationLog(reservationid, request.form)
-        return 'Accessing the PUT Method in ReservationLog'
+        return ReservationLogHandler().updateReservationLog(reservationid, request.form)
     elif request.method == 'DELETE':
-       # return ReservationLogHandler().deleteReservation(userid)
-        return 'Accessing the DELETE Method in ReservationLog'
+        return ReservationLogHandler().deleteReservation(reservationid)
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -237,34 +204,30 @@ def getReservationById(reservationid):
 @app.route('/ProyectoDB/purchaselog', methods=['GET', 'POST'])
 def getAllPurchases():
     if request.method == 'POST':
-        #No poseido por Satanas. At least, for now.
-        #Commented the working stuff for phase 1
-       # print("REQUEST: ", request.json)
-       # return ReservationLogHandler().insertReservationLogJson(request.json)
-        return 'Accessing PurchaseLog POST Method'
+        # No poseido por Satanas. At least, for now.
+        # Commented the working stuff for phase 1
+        print("REQUEST: ", request.json)
+        return ReservationLogHandler().insertReservationLogJson(request.json)
     else:
         if not request.args:
-            #return ReservationLogHandler().getAllReservationLogs()
-            return 'Accessing GET All PurchaseLog Method'
+            return ReservationLogHandler().getAllReservationLogs()
         else:
-            #return ReservationLogHandler().searchReservationLogs(request.args)
-            return 'Accessing Search PurchaseLog Method'
+            return ReservationLogHandler().searchReservationLog(request.args)
 
 
 @app.route('/ProyectoDB/purchaselog/<int:purchaseid>', methods=['GET', 'PUT', 'DELETE'])
 def getPurchaseById(purchaseid):
     if request.method == 'GET':
-       # return PurchaseLogHandler().getPurchaseLogById(purchaseid)
-       return 'Accessing the GET PurchaseLog By Id Method'
+        return PurchaseLogHandler().getPurchaseLogById(purchaseid)
     elif request.method == 'PUT':
-       # return PurchaseLogHandler().updatePurchaseLog(purchaseid, request.form)
-        return 'Accessing the PUT Method in PurchaseLog'
+        return PurchaseLogHandler().updatePurchaseLog(purchaseid, request.form)
     elif request.method == 'DELETE':
-       # return PurchaseLogHandler().deletePurchase(purchaseid)
-        return 'Accessing the DELETE Method in PurchaseLog'
+        return PurchaseLogHandler().deletePurchase(purchaseid)
     else:
         return jsonify(Error="Method not allowed."), 405
-#Must make a new class or method that searches the Carts by UserID for obvious reasons.
+
+
+# Must make a new class or method that searches the Carts by UserID for obvious reasons.
 
 
 if __name__ == "__main__":
