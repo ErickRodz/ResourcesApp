@@ -2,8 +2,9 @@ from config.dbconfig import pg_config
 import psycopg2
 
 class SuppliersDAO:
-    def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
+    def _init_(self):
+        connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
+
         self.conn = psycopg2.connect(connection_url)
 
     def getAllSuppliers(self):
@@ -61,13 +62,20 @@ class SuppliersDAO:
     def getSupplierbyUserNameandPassword(self, UserName, Password):
         cursor = self.conn.cursor()
         query = "select * from Suppliers where username = %s & password = %s;"
-        cursor.execute(query, (UserName, Password))
+        cursor.execute(query, (UserName, Password,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-
+    def getSupplierAndResourcesByAtttributeName(self, attributename):
+        cursor = self.conn.cursor()
+        query = "select supplierid, affiliation, resourceid, resourcename from Suppliers natural inner join Resources natural inner join Attributes where attributename = %s;"
+        cursor.execute(query, (attributename,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
 
     def insert(self, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender):
         cursor = self.conn.cursor()

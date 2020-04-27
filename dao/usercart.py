@@ -36,7 +36,7 @@ class UserCartDAO:
         cursor = self.conn.cursor()
         query = "insert into UserCart( userid, resourceid) values (%s, %s) returning cartid;"
         cursor.execute(query, (UserID, ResourceID,))
-        cartid= cursor.fetchone()[0]
+        cartid = cursor.fetchone()[0]
         self.conn.commit()
         return cartid
 

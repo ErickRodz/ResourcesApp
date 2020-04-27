@@ -42,6 +42,7 @@ class ResourceHandler:
     def searchResources(self, args):
         resourcename = args.get("resourcename")
         supplierid = args.get("supplierid")
+        attributename = args.get("attributename")
         dao = ResourcesDAO()
         resources_list = []
         if (len(args) == 2) and resourcename and supplierid:
@@ -50,6 +51,8 @@ class ResourceHandler:
             resources_list = dao.getResourcesByName(resourcename)
         elif (len(args) == 1) and supplierid:
             resources_list = dao.getResourcesBySupplier(supplierid)
+        elif (len(args) == 1) and attributename:
+            resources_list= dao.getResourcesByAttributeName(attributename)
         else:
             return jsonify(Error="Malformed query string"), 400
         result_list = []

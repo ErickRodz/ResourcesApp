@@ -19,7 +19,7 @@ class ReservationLogHandler:
 
     def getAllReservationLogs(self):
         dao = ReservationLogsDAO()
-        reservationlog_list = dao.getAllReservationLogs()
+        reservationlog_list = dao.getAllLogs()
         result_list = []
         for row in result_list:
             result = self.build_reservationlog_dict(row)

@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from handler.purchaselog import PurchaseLogHandler
 from handler.resources import ResourceHandler
 from handler.suppliers import SuppliersHandler
+from handler.usercart import UserCartHandler
 from handler.users import UsersHandler
 from handler.administrators import AdministratorsHandler
 from handler.attributes import AttributeHandler
@@ -128,22 +129,22 @@ def getAllCarts():
         # No poseido por Satanas. At least, for now.
         # Commented the working stuff for phase 1
         print("REQUEST: ", request.json)
-        return UsersHandler().insertUserJson(request.json)
+        return UserCartHandler().insertCartJson(request.json)
     else:
         if not request.args:
-            return UsersHandler().getAllUsers()
+            return UserCartHandler().getAllCarts()
         else:
-            return UsersHandler().searchUsers(request.args)
+            return UserCartHandler().searchUserCarts(request.args)
 
 
 @app.route('/ProyectoDB/usercart/<int:cartid>', methods=['GET', 'PUT', 'DELETE'])
 def getCartById(cartid):
     if request.method == 'GET':
-        return UsersHandler().getUserById(cartid)
+        return UserCartHandler().getCartById(cartid)
     elif request.method == 'PUT':
-        return UsersHandler().updateUser(cartid, request.form)
+        return UserCartHandler().updateCart(cartid, request.form)
     elif request.method == 'DELETE':
-        return UsersHandler().deleteUser(cartid)
+        return UserCartHandler().deleteCart(cartid)
     else:
         return jsonify(Error="Method not allowed."), 405
 

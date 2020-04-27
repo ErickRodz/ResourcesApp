@@ -55,6 +55,7 @@ class SuppliersHandler:
         email = args.get("Email")
         slocation = args.get("SLocation")
         affiliation = args.get("Affiliation")
+        attributename = args.get("attributename")
         dao = SuppliersDAO()
         suppliers_list = []
         if (len(args) == 2) and username and password:
@@ -67,6 +68,8 @@ class SuppliersHandler:
             suppliers_list = dao.getSupplierbyLocation(slocation)
         elif(len(args) == 1) and affiliation:
             suppliers_list = dao.getSupplierbyAffiliation(affiliation)
+        elif(len(args) ==1) and attributename:
+            suppliers_list = dao.getSupplierAndResourcesByAtttributeName(attributename)
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []

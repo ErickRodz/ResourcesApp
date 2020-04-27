@@ -45,7 +45,7 @@ class UserCartHandler:
             return jsonify(Carts=carts)
 
 
-    def searchUsers(self, args):
+    def searchUserCarts(self, args):
         cartid = args.get("CartID")
         userid = args.get("UserID")
         dao = UserCartDAO()
@@ -84,7 +84,7 @@ class UserCartHandler:
             dao = UserCartDAO()
             cartid = dao.insert(userid, resourceid)
             result = self.build_usercart_attributes(userid, resourceid)
-            return jsonify(Users=result), 201
+            return jsonify(Carts=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 
