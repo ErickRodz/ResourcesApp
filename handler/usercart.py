@@ -8,13 +8,15 @@ class UserCartHandler:
         result['CartID'] = row[0]
         result['UserID'] = row[1]
         result['ResourceID'] = row[2]
+        result['Selection'] = row[3]
         return result
 
-    def build_usercart_attributes(self, CartID, UserID, ResourceID):
+    def build_usercart_attributes(self, CartID, UserID, ResourceID, Selection):
         result = {}
         result['CartID'] = CartID
         result['UserID'] = UserID
         result['ResourceID'] = ResourceID
+        result['Selection'] = Selection
         return result
 
     def getAllCarts(self):
@@ -64,15 +66,16 @@ class UserCartHandler:
 
     def insertCart(self, form):
         print("form: ", form)
-        if len(form) != 2:
+        if len(form) != 3:
             return jsonify(Error = "Malformed post request"), 400
         else:
             userid = form['UserID']
             resourceid = form['ResourceID']
-            if userid and resourceid:
+            selection = form['Selection']
+            if userid and resourceid and selection:
                 dao = UserCartDAO()
-                cartid = dao.insert(userid, resourceid)
-                result = self.build_usercart_attributes(userid, resourceid)
+                cartid = dao.insert(userid, resourceid, selection)
+                result = self.build_usercart_attributes(userid, resourceid, selection)
                 return jsonify(Carts=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -80,10 +83,11 @@ class UserCartHandler:
     def insertCartJson(self, json):
         userid = json['UserID']
         resourceid = json['ResourceID']
-        if userid and resourceid:
+        selection = json['Selection']
+        if userid and resourceid and selection:
             dao = UserCartDAO()
-            cartid = dao.insert(userid, resourceid)
-            result = self.build_usercart_attributes(userid, resourceid)
+            cartid = dao.insert(userid, resourceid, selection)
+            result = self.build_usercart_attributes(userid, resourceid, selection)
             return jsonify(Carts=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
@@ -104,11 +108,25 @@ class UserCartHandler:
             if len(form) != 2:
                 return jsonify(Error="Malformed update request"), 400
             else:
-                userid = form['UserID']
                 resourceid = form['ResourceID']
-                if userid and resourceid:
-                    dao.update(cartid, userid, resourceid)
-                    result = self.build_usercart_attributes(cartid, userid, resourceid)
+                selection = form['Selection']
+                if selection and resourceid:
+                    dao.update(cartid, resourceid, selection)
+                    userid = dao.getUserIdByCartId(cartid)
+                    result = self.build_usercart_attributes(cartid, userid, resourceid, selection)
                     return jsonify(Carts=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
+
+    def updateCartJson(self, cartid, json):
+        dao = UserCartDAO()
+        if not dao.getCartById(cartid):
+            return jsonify(Error="Admin not found."), 404
+        else:
+            resourceid = json['ResourceID']
+            selection = json['Selection']
+            if selection and resourceid:
+                dao.update(cartid, resourceid, selection)
+                userid = dao.getUserIdByCartId(cartid)
+                result = self.build_usercart_attributes(cartid, userid, resourceid)
+                return jsonify(Carts=result), 200

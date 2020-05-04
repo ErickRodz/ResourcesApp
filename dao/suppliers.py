@@ -68,19 +68,19 @@ class SuppliersDAO:
             result.append(row)
         return result
 
-    def getSupplierAndResourcesByAtttributeName(self, attributename):
+    def getSupplierAndResourcesByCategoryName(self, categoryname):
         cursor = self.conn.cursor()
-        query = "select supplierid, affiliation, resourceid, resourcename from Suppliers natural inner join Resources natural inner join Attributes where attributename = %s;"
-        cursor.execute(query, (attributename,))
+        query = "select supplierid, affiliation, resourceid, resourcename from Suppliers natural inner join Resources natural inner join Categories where categoryname = %s;"
+        cursor.execute(query, (categoryname,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def insert(self, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender):
+    def insert(self, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
         cursor = self.conn.cursor()
-        query = "insert into Suppliers(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender) values (%s, %s, %s, %s) returning supplierid;"
-        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender,))
+        query = "insert into Suppliers(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname) values (%s, %s, %s, %s, %s, %s, %s %s, %s, %s, %s) returning supplierid;"
+        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender ,CategoryID, CategoryName,))
         supplierid = cursor.fetchone()[0]
         self.conn.commit()
         return supplierid
@@ -92,9 +92,9 @@ class SuppliersDAO:
         self.conn.commit()
         return SupplierID
 
-    def update(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender):
+    def update(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
         cursor = self.conn.cursor()
-        query = "update suppliers set username = %s, password = %s, email = %s, slocation = %s, affiliation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s where supplierid = %s;"
-        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender, SupplierID,))
+        query = "update suppliers set username = %s, password = %s, email = %s, slocation = %s, affiliation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s, categoryid = %s, categoryname = %s where supplierid = %s;"
+        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender, CategoryID, CategoryName, SupplierID,))
         self.conn.commit()
         return SupplierID

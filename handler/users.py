@@ -9,7 +9,7 @@ class UsersHandler:
         result['UserName'] = row[1]
         result['Password'] = row[2]
         result['Email'] = row[3]
-        result['PaymentMethod'] = row[4]
+        result['CardID'] = row[4]
         result['ULocation'] = row[5]
         result['FirstName'] = row[6]
         result['LastName'] = row[7]
@@ -17,13 +17,13 @@ class UsersHandler:
         result['Gender'] = row[9]
         return result
 
-    def build_users_attributes(self, UserID, UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth, Gender):
+    def build_users_attributes(self, UserID, UserName, Password, Email, CardID, ULocation, FirstName, LastName, DateofBirth, Gender):
         result = {}
         result['UserID'] = UserID
         result['UserName'] = UserName
         result['Password'] = Password
         result['Email'] = Email
-        result['PaymentMethod'] = PaymentMethod
+        result['CardID'] = CardID
         result['ULocation'] = ULocation
         result['FirstName'] = FirstName
         result['LastName'] = LastName
@@ -89,16 +89,16 @@ class UsersHandler:
             username = form['UserName']
             password = form['Password']
             email = form['Email']
-            paymentmethod = form['PaymentMethod']
+            cardid = form['CardID']
             ulocation = form['ULocation']
             firstname = form['FirstName']
             lastname = form['LastName']
             dateofbirth = form['DateofBirth']
             gender = form['Gender']
-            if  username and password and email and paymentmethod and ulocation and firstname and lastname and dateofbirth and gender:
+            if  username and password and email and cardid and ulocation and firstname and lastname and dateofbirth and gender:
                 dao = UsersDAO()
-                userid = dao.insert(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
-                result = self.build_users_attributes(userid, username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
+                userid = dao.insert(username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
+                result = self.build_users_attributes(userid, username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
                 return jsonify(Users=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -107,16 +107,16 @@ class UsersHandler:
         username = json['UserName']
         password = json['Password']
         email = json['Email']
-        paymentmethod = json['PaymentMethod']
+        cardid = json['CardID']
         ulocation = json['ULocation']
         firstname = json['FirstName']
         lastname = json['LastName']
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
-        if  username and password and email and paymentmethod and ulocation and firstname and lastname and dateofbirth and gender:
+        if  username and password and email and cardid and ulocation and firstname and lastname and dateofbirth and gender:
             dao = UsersDAO()
-            userid = dao.insert(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth,gender)
-            result = self.build_users_attributes(userid,username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth,gender)
+            userid = dao.insert(username, password, email, cardid, ulocation, firstname, lastname, dateofbirth,gender)
+            result = self.build_users_attributes(userid,username, password, email, cardid, ulocation, firstname, lastname, dateofbirth,gender)
             return jsonify(Users=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
@@ -140,15 +140,34 @@ class UsersHandler:
                 username = form['UserName']
                 password = form['Password']
                 email = form['Email']
-                paymentmethod = form['PaymentMethod']
+                cardid = form['CardID']
                 ulocation = form['ULocation']
                 firstname = form['FirstName']
                 lastname = form['LastName']
                 dateofbirth = form['DateofBirth']
                 gender = form['Gender']
-                if username and password and email and paymentmethod and ulocation and firstname and lastname and dateofbirth and gender:
-                    dao.update(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
-                    result = self.build_users_attributes(username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender)
+                if username and password and email and cardid and ulocation and firstname and lastname and dateofbirth and gender:
+                    dao.update(username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
+                    result = self.build_users_attributes(username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
                     return jsonify(Users=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
+
+    def updateUserJson(self, userid, json):
+        dao = UsersDAO()
+        if not dao.getUserById(userid):
+            return jsonify(Error="Admin not found."), 404
+        else:
+            username = json['UserName']
+            password = json['Password']
+            email = json['Email']
+            cardid = json['CardID']
+            ulocation = json['ULocation']
+            firstname = json['FirstName']
+            lastname = json['LastName']
+            dateofbirth = json['DateofBirth']
+            gender = json['Gender']
+            if username and password and email and cardid and ulocation and firstname and lastname and dateofbirth and gender:
+                dao.update(userid, username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
+                result = self.build_users_attributes(userid, username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender)
+                return jsonify(Users=result), 200

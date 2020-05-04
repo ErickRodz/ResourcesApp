@@ -31,11 +31,28 @@ class UserCartDAO:
             result.append(row)
         return result
 
-
-    def insert(self, UserID, ResourceID):
+    def getUserIdByCartId(self, CartID):
         cursor = self.conn.cursor()
-        query = "insert into UserCart( userid, resourceid) values (%s, %s) returning cartid;"
-        cursor.execute(query, (UserID, ResourceID,))
+        query = "select userid from Users natural inner join UserCart where cartid = %s;"
+        cursor.execute(query, (CartID,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourceIdByCartId(self, CartID):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Resources natural inner join UserCart where cartid = %s;"
+        cursor.execute(query, (CartID,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def insert(self, UserID, ResourceID, Selection):
+        cursor = self.conn.cursor()
+        query = "insert into UserCart(userid, resourceid, selection) values (%s, %s,%s) returning cartid;"
+        cursor.execute(query, (UserID, ResourceID, Selection))
         cartid = cursor.fetchone()[0]
         self.conn.commit()
         return cartid
@@ -47,9 +64,9 @@ class UserCartDAO:
         self.conn.commit()
         return CartID
 
-    def update(self, CartID, UserID, ResourceID):
+    def update(self, CartID, ResourceID, Selection):
         cursor = self.conn.cursor()
-        query = "update usercart set resourceid = %s where cartid = %s;"
-        cursor.execute(query, (UserID, CartID, ResourceID,))
+        query = "update usercart set resourceid = %s, selection = %s where cartid = %s;"
+        cursor.execute(query, (ResourceID, Selection, CartID))
         self.conn.commit()
         return CartID

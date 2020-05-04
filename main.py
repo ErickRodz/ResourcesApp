@@ -1,13 +1,11 @@
 from flask import Flask, jsonify, request
 
-from handler.purchaselog import PurchaseLogHandler
 from handler.resources import ResourceHandler
 from handler.suppliers import SuppliersHandler
 from handler.usercart import UserCartHandler
 from handler.users import UsersHandler
 from handler.administrators import AdministratorsHandler
 from handler.attributes import AttributeHandler
-from handler.reservationlog import  ReservationLogHandler
 from flask_cors import CORS, cross_origin
 
 # Activate
@@ -39,7 +37,7 @@ def getUserById(userid):
     if request.method == 'GET':
         return UsersHandler().getUserById(userid)
     elif request.method == 'PUT':
-        return UsersHandler().updateUser(userid, request.form)
+        return UsersHandler().updateUserJson(userid, request.json)
     elif request.method == 'DELETE':
         return UsersHandler().deleteUser(userid)
     else:
@@ -87,7 +85,7 @@ def getAdministratorsbyId(administratorid):
     if request.method == 'GET':
         return AdministratorsHandler().getAdministratorById(administratorid)
     elif request.method == 'PUT':
-        return AdministratorsHandler().updateAdministrator(administratorid, request.form)
+        return AdministratorsHandler().updateAdministratorJson(administratorid, request.json)
     elif request.method == 'DELETE':
         return AdministratorsHandler().deleteAdministrator(administratorid)
     else:
@@ -142,7 +140,7 @@ def getCartById(cartid):
     if request.method == 'GET':
         return UserCartHandler().getCartById(cartid)
     elif request.method == 'PUT':
-        return UserCartHandler().updateCart(cartid, request.form)
+        return UserCartHandler().updateCartJson(cartid, request.json)
     elif request.method == 'DELETE':
         return UserCartHandler().deleteCart(cartid)
     else:
@@ -174,58 +172,6 @@ def getAllAttributes():
             pass
         else:
             return AttributeHandler().searchAttributes(request.args)
-
-
-@app.route('/ProyectoDB/reservationlog', methods=['GET', 'POST'])
-def getAllReservations():
-    if request.method == 'POST':
-        # No poseido por Satanas. At least, for now.
-        # Commented the working stuff for phase 1
-        print("REQUEST: ", request.json)
-        return ReservationLogHandler().insertReservationLogJson(request.json)
-    else:
-        if not request.args:
-            return ReservationLogHandler().getAllReservationLogs()
-        else:
-            return ReservationLogHandler().searchReservationLogs(request.args)
-
-
-@app.route('/ProyectoDB/reservationlog/<int:reservationid>', methods=['GET', 'PUT', 'DELETE'])
-def getReservationById(reservationid):
-    if request.method == 'GET':
-        return ReservationLogHandler().getReservationLogById(reservationid)
-    elif request.method == 'PUT':
-        return ReservationLogHandler().updateReservationLog(reservationid, request.form)
-    elif request.method == 'DELETE':
-        return ReservationLogHandler().deleteReservation(reservationid)
-    else:
-        return jsonify(Error="Method not allowed."), 405
-
-
-@app.route('/ProyectoDB/purchaselog', methods=['GET', 'POST'])
-def getAllPurchases():
-    if request.method == 'POST':
-        # No poseido por Satanas. At least, for now.
-        # Commented the working stuff for phase 1
-        print("REQUEST: ", request.json)
-        return ReservationLogHandler().insertReservationLogJson(request.json)
-    else:
-        if not request.args:
-            return ReservationLogHandler().getAllReservationLogs()
-        else:
-            return ReservationLogHandler().searchReservationLog(request.args)
-
-
-@app.route('/ProyectoDB/purchaselog/<int:purchaseid>', methods=['GET', 'PUT', 'DELETE'])
-def getPurchaseById(purchaseid):
-    if request.method == 'GET':
-        return PurchaseLogHandler().getPurchaseLogById(purchaseid)
-    elif request.method == 'PUT':
-        return PurchaseLogHandler().updatePurchaseLog(purchaseid, request.form)
-    elif request.method == 'DELETE':
-        return PurchaseLogHandler().deletePurchase(purchaseid)
-    else:
-        return jsonify(Error="Method not allowed."), 405
 
 
 # Must make a new class or method that searches the Carts by UserID for obvious reasons.

@@ -15,9 +15,11 @@ class SuppliersHandler:
         result['LastName'] = row[7]
         result['DateofBirth'] = row[8]
         result['Gender'] = row[9]
+        result['CategoryID'] = row[10]
+        result['CategoryName'] = row[11]
         return result
 
-    def build_suppliers_attributes(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender):
+    def build_suppliers_attributes(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
         result = {}
         result['SupplierID'] = SupplierID
         result['UserName'] = UserName
@@ -29,6 +31,8 @@ class SuppliersHandler:
         result['LastName'] = LastName
         result ['DateofBirth'] = DateofBirth
         result ['Gender'] = Gender
+        result ['CategoryID'] = CategoryID
+        result ['CategoryName'] = CategoryName
         return result
 
     def getAllSuppliers(self):
@@ -55,8 +59,14 @@ class SuppliersHandler:
         email = args.get("Email")
         slocation = args.get("SLocation")
         affiliation = args.get("Affiliation")
-        attributename = args.get("attributename")
+        firstname = args.get("FirstName")
+        lastname = args.get("LastName")
+        dateofbirth = args.get("DateofBirth")
+        gender = args.get("Gender")
+        categoryid = args.get("CategoryID")
+        categoryname = args.get("CategoryName")
         dao = SuppliersDAO()
+
         suppliers_list = []
         if (len(args) == 2) and username and password:
             suppliers_list = dao.getSupplierbyUserNameandPassword(username, password)
@@ -68,8 +78,8 @@ class SuppliersHandler:
             suppliers_list = dao.getSupplierbyLocation(slocation)
         elif(len(args) == 1) and affiliation:
             suppliers_list = dao.getSupplierbyAffiliation(affiliation)
-        elif(len(args) ==1) and attributename:
-            suppliers_list = dao.getSupplierAndResourcesByAtttributeName(attributename)
+        elif(len(args) ==1) and categoryname:
+            suppliers_list = dao.getSupplierAndResourcesByCategoryName(categoryname)
         else:
             return jsonify(Error = "Malformed query string"), 400
         result_list = []
@@ -80,7 +90,7 @@ class SuppliersHandler:
 
     def insertSupplier(self, form):
         print("form: ", form)
-        if len(form) != 4:
+        if len(form) != 11:
             return jsonify(Error = "Malformed post request"), 400
         else:
             username = form['UserName']
@@ -92,10 +102,12 @@ class SuppliersHandler:
             lastname = form['LastName']
             dateofbirth = form['DateofBirth']
             gender = form['Gender']
-            if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender:
+            categoryid = form['CategoryID']
+            categoryname = form['CategoryName']
+            if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
                 dao = SuppliersDAO()
-                supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender)
-                result = self.build_users_attributes(supplierid, username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender)
+                supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
+                result = self.build_users_attributes(supplierid, username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
                 return jsonify(Suppliers=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -110,10 +122,12 @@ class SuppliersHandler:
         lastname = json['LastName']
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
-        if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender:
+        categoryid = json['CategoryID']
+        categoryname = json['CategoryName']
+        if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
             dao = SuppliersDAO()
-            supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender)
-            result = self.build_suppliers_attributes(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender)
+            supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
+            result = self.build_suppliers_attributes(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
             return jsonify(Suppliers=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
@@ -131,7 +145,7 @@ class SuppliersHandler:
         if not dao.getSupplierById(supplierid):
             return jsonify(Error = "Supplier not found."), 404
         else:
-            if len(form) != 4:
+            if len(form) != 11:
                 return jsonify(Error="Malformed update request"), 400
             else:
                 username = form['UserName']
@@ -143,9 +157,32 @@ class SuppliersHandler:
                 lastname = form['LastName']
                 dateofbirth = form['DateofBirth']
                 gender = form['Gender']
-                if username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender:
-                    dao.update(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender)
-                    result = self.build_suppliers_attributes(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender)
+                categoryid = form['CategoryID']
+                categoryname = form['CategoryName']
+                if username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
+                    dao.update(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname)
+                    result = self.build_suppliers_attributes(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname)
                     return jsonify(Suppliers=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
+
+    def updateSupplierJson(self, supplierid, json):
+        dao = SuppliersDAO()
+        if not dao.getSupplierById(supplierid):
+            return jsonify(Error="Admin not found."), 404
+        else:
+            username = json['UserName']
+            password = json['Password']
+            email = json['Email']
+            slocation = json['SLocation']
+            affiliation = json['affiliation']
+            firstname = json['FirstName']
+            lastname = json['LastName']
+            dateofbirth = json['DateofBirth']
+            gender = json['Gender']
+            categoryid = json['CategoryID']
+            categoryname = json['CategoryName']
+            if username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
+                dao.update(supplierid, username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname)
+                result = self.build_suppliers_attributes(supplierid,username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname)
+                return jsonify(Administrators=result), 200

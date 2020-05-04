@@ -58,10 +58,10 @@ class UsersDAO:
 
 
 
-    def insert(self, UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender):
+    def insert(self, UserName, Password, Email, CardID, ULocation, FirstName, LastName, DateofBirth,Gender):
         cursor = self.conn.cursor()
-        query = "insert into Users( username, password, email, paymentmethod, ulocation, firstname, lastname, dateofbirth, gender) values (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning userid;"
-        cursor.execute(query, (UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender,))
+        query = "insert into Users( username, password, email, cardid, ulocation, firstname, lastname, dateofbirth, gender) values (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning userid;"
+        cursor.execute(query, (UserName, Password, Email, CardID, ULocation, FirstName, LastName, DateofBirth,Gender,))
         userid = cursor.fetchone()[0]
         self.conn.commit()
         return userid
@@ -73,9 +73,9 @@ class UsersDAO:
         self.conn.commit()
         return UserID
 
-    def update(self, UserID, UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender):
+    def update(self, UserID, UserName, Password, Email, CardID, ULocation, FirstName, LastName, DateofBirth,Gender):
         cursor = self.conn.cursor()
-        query = "update users set username = %s, password = %s, email = %s, paymentmethod = %s, ulocation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s where userid = %s;"
-        cursor.execute(query, (UserName, Password, Email, PaymentMethod, ULocation, FirstName, LastName, DateofBirth,Gender, UserID,))
+        query = "update users set username = %s, password = %s, email = %s, cardid = %s, ulocation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s where userid = %s;"
+        cursor.execute(query, (UserName, Password, Email, CardID, ULocation, FirstName, LastName, DateofBirth,Gender, UserID,))
         self.conn.commit()
         return UserID
