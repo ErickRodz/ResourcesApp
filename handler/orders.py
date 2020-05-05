@@ -12,9 +12,10 @@ class OrdersHandler:
         result['resourceid'] = row[4]
         result['totalprice'] = row[5]
         result['totalquantity'] = row[6]
+        result['resourcename'] = row[7]
         return result
 
-    def build_orders_attributes(self, orderid, userid, cardid, cartid, resourceid, totalprice, totalquantity):
+    def build_orders_attributes(self, orderid, userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename):
         result = {}
         result['orderid'] = orderid
         result['userid'] = userid
@@ -23,6 +24,7 @@ class OrdersHandler:
         result['resourceid'] = resourceid
         result['totalprice'] = totalprice
         result['totalquantity'] = totalquantity
+        result['resourcename'] = resourcename
         return result
 
     def getAllOrders(self):
@@ -44,6 +46,16 @@ class OrdersHandler:
         else:
             order = self.build_orders_dict(row)
             return jsonify(Order=order)
+
+    def getRequestedResourcesByResourceName(self, resorcename):
+        dao = OrdersDAO()
+        requests_list = dao.getResourcesRequestByResourceName(resorcename)
+        result_list = []
+        for row in requests_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
 
     def searchOrders(self, args):
         userid = args.get('userid')
@@ -129,20 +141,21 @@ class OrdersHandler:
         if not dao.getOrderById(orderid):
             return jsonify(Error="Order not found."), 404
         else:
-            if len(form) != 1 or resourceid != dao.getResourceIdByOrderId(orderid):
+            if len(form) != 2 or resourceid != dao.getResourceIdByOrderId(orderid):
                 return jsonify(Error="Malformed update request")
             else:
 
                 totalquantity = form['totalquantity']
-                if  totalquantity:
+                resourcename = form['resourcename']
+                if  totalquantity and resourcename:
                     resourceprice = dao.getResourcePriceByResourceId(resourceid)
                     totalprice = totalquantity * resourceprice
-                    dao.update(totalprice, totalquantity, orderid)
-                    userid = dao.getResourceIdByOrderId(orderid)
+                    dao.update(totalprice, totalquantity, resourcename, orderid)
+                    userid = dao.getUserIdIdByOrderId(orderid)
                     cardid = dao.getCardIdIdByOrderId(orderid)
                     cartid = dao.getCartidByOrderId(orderid)
                     result = self.build_orders_attributes(orderid, userid, cardid, cartid,
-                                                            resourceid, totalprice, totalquantity)
+                                                            resourceid, totalprice, totalquantity, resourcename)
                     return jsonify(Order=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
@@ -158,15 +171,16 @@ class OrdersHandler:
         else:
 
             totalquantity = json['totalquantity']
-            if totalquantity:
+            resourcename = json['resourcename']
+            if totalquantity and resourcename:
                 resourceprice = dao.getResourcePriceByResourceId(resourceid)
                 totalprice = totalquantity * resourceprice
-                dao.update(totalprice, totalquantity, orderid)
-                userid = dao.getResourceIdByOrderId(orderid)
+                dao.update(totalprice, totalquantity, resourcename, orderid)
+                userid = dao.getUserIdIdByOrderId(orderid)
                 cardid = dao.getCardIdIdByOrderId(orderid)
                 cartid = dao.getCartidByOrderId(orderid)
                 result = self.build_orders_attributes(orderid, userid, cardid, cartid,
-                                                      resourceid, totalprice, totalquantity)
+                                                      resourceid, totalprice, totalquantity, resourcename)
                 return jsonify(Order=result), 200
             else:
                 return jsonify(Error="Unexpected attributes in update request"), 400

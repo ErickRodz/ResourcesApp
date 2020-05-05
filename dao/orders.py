@@ -56,6 +56,38 @@ class OrdersDAO:
             result.append(row)
         return result
 
+    def getResourceIdByOrderId(self, orderid):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Orders where orderid = %s;"
+        cursor.execute(query, (orderid,))
+        result = []
+        result = cursor.fetchone()
+        return result
+
+    def getUserIdIdByOrderId(self, orderid):
+        cursor = self.conn.cursor()
+        query = "select userid from Orders where orderid = %s;"
+        cursor.execute(query, (orderid,))
+        result = []
+        result = cursor.fetchone()
+        return result
+
+    def getCardIdIdByOrderId(self, orderid):
+        cursor = self.conn.cursor()
+        query = "select cardid from Orders where orderid = %s;"
+        cursor.execute(query, (orderid,))
+        result = []
+        result = cursor.fetchone()
+        return result
+
+    def getCartidByOrderId(self, orderid):
+        cursor = self.conn.cursor()
+        query = "select cartid from Orders where orderid = %s;"
+        cursor.execute(query, (orderid,))
+        result = []
+        result = cursor.fetchone()
+        return result
+
     def getResourceQuantityByResourceId(self, resourceid):
         cursor = self.conn.cursor()
         query = "select resourcequantity from Resources natural inner join Orders where resourceid = %s;"
@@ -73,7 +105,7 @@ class OrdersDAO:
     def getOrdersByCardIdAndResourceId(self, cardid, resourceid):
         cursor = self.conn.cursor()
         query = "select * from Orders where cardid = %s & resourceid = %s;"
-        cursor.execute(query, (cardid, resourceid))
+        cursor.execute(query, (cardid, resourceid,))
         result = []
         for row in cursor:
             result.append(row)
@@ -82,16 +114,25 @@ class OrdersDAO:
     def getOrdersByUserIdAndResourceId(self, userid, resourceid):
         cursor = self.conn.cursor()
         query = "select * from Orders where userid = %s & resourceid = %s;"
-        cursor.execute(query, (userid, resourceid))
+        cursor.execute(query, (userid, resourceid,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def insert(self, totalprice, totalquantity, userid, cardid, cartid, resourceid):
+    def getResourcesRequestByResourceName(self, resourcename):
+         cursor = self.conn.cursor()
+         query = "select * from Resources natural inner join Orders where resourcename = %s order by resourcename;"
+         cursor.execute(query, (resourcename,))
+         result = []
+         for row in cursor:
+             result.append(row)
+         return result
+
+    def insert(self, userid, cardid, cartid, resourceid,  totalprice, totalquantity, resourcename):
         cursor = self.conn.cursor()
-        query = "insert into Orders(userid, cardid, cartid, resourceid, totalprice, totalquantity) values (%s, %s, %s, %s, %s, %s) returning orderid;"
-        cursor.execute(query, (userid, cardid, cartid, resourceid, totalprice, totalquantity,))
+        query = "insert into Orders(userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename) values (%s, %s, %s, %s, %s, %s, %s) returning orderid;"
+        cursor.execute(query, (userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename,))
         orderid = cursor.fetchone()[0]
         self.conn.commit()
         return orderid
@@ -103,10 +144,10 @@ class OrdersDAO:
         self.conn.commit()
         return orderid
 
-    def update(self, totalprice, totalquantity, orderid):
+    def update(self, totalprice, totalquantity, resourcename, orderid):
         cursor = self.conn.cursor()
-        query = "update Orders set totalprice = %s, totalquantity = %s where orderid = %s;"
-        cursor.execute(query, (totalprice, totalquantity, orderid,))
+        query = "update Orders set totalprice = %s, totalquantity = %s, resourcename = %s where orderid = %s;"
+        cursor.execute(query, (totalprice, totalquantity, resourcename, orderid,))
         self.conn.commit()
         return orderid
 

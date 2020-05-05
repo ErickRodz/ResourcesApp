@@ -25,10 +25,23 @@ class ResourceHandler:
         dao = ResourcesDAO()
         resources_list = dao.getAllResources()
         result_list = []
+        #resources_list = [0,0,'papel de toilet', 5, 10]
         for row in resources_list:
             result = self.build_resource_dict(row)
             result_list.append(result)
+
         return jsonify(Resources=result_list)
+
+    def getAllResourcesAvailable(self):
+        dao = ResourcesDAO()
+        resources_list = dao.getResourcesAvailable()
+        result_list = []
+        for row in resources_list:
+            result = self.build_resource_dict(row)
+            result_list.append(result)
+
+        return jsonify(Resources=result_list)
+
 
     def getResourceByID(self, resourceid):
         dao = ResourcesDAO

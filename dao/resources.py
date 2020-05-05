@@ -38,10 +38,11 @@ class ResourcesDAO:
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result
-    def getResourcesByAttributeName(self, attributename):
+
+    def getResourcesByCategoryName(self, categoryname):
         cursor = self.conn.cursor()
-        query = "select * from Resources natural inner join Attributes where attributename = %s;"
-        cursor.execute(query, (attributename,))
+        query = "select * from Resources natural inner join Categories where categoryname = %s;"
+        cursor.execute(query, (categoryname,))
         result = []
         for row in cursor:
             result.append(row)
@@ -49,8 +50,17 @@ class ResourcesDAO:
 
     def getResourcesByName(self, resourcename):
         cursor = self.conn.cursor()
-        query = "select * from Resources where resourcename = %s;"
+        query = "select * from Resources where resourcename = %s order by resourcename;"
         cursor.execute(query, (resourcename,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourcesAvailable(self):
+        cursor = self.conn.cursor()
+        query = "select * from Resources where resourcequantity > 0 order by resourcename;"
+        cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)

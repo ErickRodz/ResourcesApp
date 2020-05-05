@@ -5,7 +5,8 @@ from handler.suppliers import SuppliersHandler
 from handler.usercart import UserCartHandler
 from handler.users import UsersHandler
 from handler.administrators import AdministratorsHandler
-from handler.attributes import AttributeHandler
+from handler.paymentmethod import PaymentMethodHandler
+from handler.bank import BankHandler
 from flask_cors import CORS, cross_origin
 
 # Activate
@@ -149,29 +150,32 @@ def getCartById(cartid):
 
 # Must make a new class or method that searches the Carts by UserID for obvious reasons.
 
-
-@app.route('/ProyectoDB/attributes/<int:attributeid>', methods=['GET', 'PUT', 'DELETE'])
-def getAttributesById(attributeid):
-    if request.method == 'GET':
-        return AttributeHandler().getAttributeByID(attributeid)
-    elif request.method == 'PUT':
-        return AttributeHandler().updateAttribute(attributeid, request.form)
-    elif request.method == 'DELETE':
-        return AttributeHandler().deleteAttribute(attributeid)
-
-
-@app.route('/ProyectoDB/attributes', methods=['GET', 'POST'])
-def getAllAttributes():
+@app.route('/ProyectoDB/bank', methods=['GET', 'POST'])
+def getAllBanks():
     if request.method == 'POST':
         # No poseido por Satanas. At least, for now.
-        # Testing still neccesarry
+        # Commented the working stuff for phase 1
         print("REQUEST: ", request.json)
-        return AttributeHandler().insertAttributeJson(request.json)
+        return BankHandler().insertBankJson(request.json)
     else:
         if not request.args:
-            pass
+            return BankHandler().getAllBanks()
         else:
-            return AttributeHandler().searchAttributes(request.args)
+            return BankHandler().searchBanks(request.args)
+
+@app.route('/ProyectoDB/payment', methods=['GET', 'POST'])
+def getAllPaymentMethods():
+    if request.method == 'POST':
+        # No poseido por Satanas. At least, for now.
+        # Commented the working stuff for phase 1
+        print("REQUEST: ", request.json)
+        return PaymentMethodHandler().insertCardJson(request.json)
+    else:
+        if not request.args:
+            return PaymentMethodHandler().getAllCards()
+        else:
+            return PaymentMethodHandler().searchCards(request.args)
+
 
 
 # Must make a new class or method that searches the Carts by UserID for obvious reasons.

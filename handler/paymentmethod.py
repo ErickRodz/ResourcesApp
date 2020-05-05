@@ -8,14 +8,16 @@ class PaymentMethodHandler:
         result['CardID'] = row[0]
         result['UserID'] = row[1]
         result['BankID'] = row[2]
-        result['CardNumber'] = row[3]
+        result['CardType'] = row[3]
+        result['CardNumber'] = row[4]
         return result
 
-    def build_paymentmethod_attributes(self, CardID, UserID, BankID, CardNumber):
+    def build_paymentmethod_attributes(self, CardID, UserID, BankID, CardType, CardNumber):
         result = {}
         result['CardID'] = CardID
         result['UserID'] = UserID
         result['BankID'] = BankID
+        result['CardType'] = CardType
         result['CardNumber'] = CardNumber
         return result
 
@@ -28,9 +30,18 @@ class PaymentMethodHandler:
             result_list.append(result)
         return jsonify(Cards=result_list)
 
+    def getAllCardsWithUsers(self):
+        dao = PaymentMethodDAO()
+        card_list = dao.getAllCardsWithUsers()
+        result_list = []
+        for row in card_list:
+            result = self.build_paymentmethod_dict(row)
+            result_list.append(result)
+        return jsonify(Cards=result_list)
+
     def getCardById(self, CardID):
         dao = PaymentMethodDAO()
-        row = dao.getCardById(CardID)
+        row = dao.getCardbyID(CardID)
         if not row:
             return jsonify(Error = "Card Not Found"), 404
         else:
@@ -51,6 +62,8 @@ class PaymentMethodHandler:
         cardid = args.get("CardID")
         userid = args.get("UserID")
         bankid = args.get("BankID")
+        cardtype = args.get("CardType")
+        cardnumber = args.get("CardNumber")
         dao = PaymentMethodDAO()
         cards_list = []
         if (len(args) == 1) and cardid:
@@ -86,11 +99,12 @@ class PaymentMethodHandler:
     def insertCardJson(self, json):
         userid = json['UserID']
         bankid = json['ResourceID']
+        cardtype = json['CardType']
         cardnumber = json['CardNumber']
-        if userid and bankid and cardnumber:
+        if userid and bankid and cardtype and cardnumber:
             dao = PaymentMethodDAO()
-            cardid = dao.insert(userid, bankid, cardnumber)
-            result = self.build_paymentmethod_attributes(userid, bankid. cardnumber)
+            cardid = dao.insert(userid, bankid, cardtype, cardnumber)
+            result = self.build_paymentmethod_attributes(cardid, userid, bankid, cardtype, cardnumber)
             return jsonify(Cards=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
@@ -103,7 +117,7 @@ class PaymentMethodHandler:
             dao.delete(cardid)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateUCard(self, cardid, form):
+    def updateCard(self, cardid, form):
         dao = PaymentMethodDAO()
         if not dao.getCardbyID(cardid):
             return jsonify(Error = "Card not found."), 404
@@ -121,15 +135,16 @@ class PaymentMethodHandler:
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
 
-    def updateCartJson(self, cardid, json):
+    def updateCardJson(self, cardid, json):
         dao = PaymentMethodDAO()
         if not dao.getCardbyID(cardid):
             return jsonify(Error="Card not found."), 404
         else:
             userid = json['UserID']
             bankid = json['BankID']
+            cardtype = json['CardType']
             cardnumber = json['BankNumber']
-            if userid and bankid and cardnumber:
-                dao.update(cardid, userid, bankid, cardnumber)
-                result = self.build_paymentmethod_attributes(cardid, userid, bankid, cardnumber)
+            if userid and bankid and cardtype and cardnumber:
+                dao.update(cardid, userid, bankid, cardtype, cardnumber)
+                result = self.build_paymentmethod_attributes(cardid, userid, bankid, cardtype, cardnumber)
                 return jsonify(Cards=result), 200

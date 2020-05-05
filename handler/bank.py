@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.bank import BankDAO
 
 
-class AdministratorsHandler:
+class BankHandler:
     def build_bank_dict(self, row):
         result = {}
         result['BankID'] = row[0]
@@ -30,7 +30,7 @@ class AdministratorsHandler:
 
     def getBankById(self, BankID):
         dao = BankDAO()
-        row = dao.getBankrById(BankID)
+        row = dao.getBankById(BankID)
         if not row:
             return jsonify(Error = "Bank Not Found"), 404
         else:

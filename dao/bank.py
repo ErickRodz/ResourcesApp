@@ -62,7 +62,7 @@ class BankDAO:
 
     def insert(self, CardID, UserID, Bankname):
         cursor = self.conn.cursor()
-        query = "insert into Bank(cardid, bankid, Bankname) values (%s, %s, %s) returning adminid;"
+        query = "insert into Bank(cardid, userid, Bankname) values (%s, %s, %s) returning bankid;"
         cursor.execute(query, (CardID, UserID, Bankname,))
         bankid = cursor.fetchone()[0]
         self.conn.commit()

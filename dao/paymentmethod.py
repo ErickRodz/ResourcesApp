@@ -1,11 +1,14 @@
 from config.dbconfig import pg_config
 import psycopg2
 
+
 class PaymentMethodDAO:
     def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
+        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1" % (
+        pg_config['dbname'], pg_config['user'], pg_config['passwd'])
         self.conn = psycopg2.connect(connection_url)
-    #Check if this works. Since this will be logically called.
+
+    # Check if this works. Since this will be logically called.
     def getAllCardsWithUsers(self):
         cursor = self.conn.cursor()
         query = "select * from PaymentMethod natural inner join Users natural inner join Bank;"
@@ -37,7 +40,8 @@ class PaymentMethodDAO:
         cursor.execute(query, (BankID,))
         result = cursor.fetchone()
         return result
-    #Verify this once since it'd be logically used in  website
+
+    # Verify this once since it'd be logically used in  website
     def getCardbyUserID(self, UserID):
         cursor = self.conn.cursor()
         query = "select * from PaymentMethod where userid = %s natural inner join Users;"
@@ -47,11 +51,10 @@ class PaymentMethodDAO:
             result.append(row)
         return result
 
-
-    def insert(self, UserID, BankID, CardNumber):
+    def insert(self, UserID, BankID, Cardtype, CardNumber):
         cursor = self.conn.cursor()
-        query = "insert into PaymentMethod(userid, bankid, cardnumber) values (%s, %s, %s) returning cardid;"
-        cursor.execute(query, (UserID, BankID, CardNumber,))
+        query = "insert into PaymentMethod(userid, bankid, cardtype, cardnumber) values (%s, %s, %s, %s) returning cardid;"
+        cursor.execute(query, (UserID, BankID, Cardtype, CardNumber,))
         cardid = cursor.fetchone()[0]
         self.conn.commit()
         return cardid
@@ -63,9 +66,9 @@ class PaymentMethodDAO:
         self.conn.commit()
         return CardID
 
-    def update(self, CardID, UserID, BankID, CardNumber):
+    def update(self, CardID, UserID, BankID, Cardtype, CardNumber):
         cursor = self.conn.cursor()
-        query = "update PaymentMethod set userid = %s, bankid = %s, cardnumber = %s where cardid = %s;"
-        cursor.execute(query, (CardID, UserID, BankID, CardNumber,))
+        query = "update PaymentMethod set userid = %s, bankid = %s, cardtype = %s, cardnumber = %s where cardid = %s;"
+        cursor.execute(query, (CardID, UserID, BankID, Cardtype, CardNumber,))
         self.conn.commit()
         return CardID
