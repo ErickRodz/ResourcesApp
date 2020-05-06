@@ -41,6 +41,13 @@ class ClothingDAO:
         result = cursor.fetchone()
         return result
 
+    def getClothingByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Clothing where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def insert(self, Clothingbrand, Clothingsize, Clothingfabric, Clothingdescription, resourceid):
         cursor = self.conn.cursor()
         query = "insert into Clothing(Clothingbrand, Clothingsize, Clothingfabric, Clothingdescription, resourceid) values (%s, %s, %s, %s, %s) returning Clothingid;"

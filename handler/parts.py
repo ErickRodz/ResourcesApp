@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.parts import PartsDAO
 
 
-class ResourceHandler:
+class PartsHandler:
     def build_parts_dict(self, row):
         result = {}
         result['PartsID'] = row[0]
@@ -33,6 +33,24 @@ class ResourceHandler:
     def getPartsByID(self, Partsid):
         dao = PartsDAO()
         row = dao.getPartsById(Partsid)
+        if not row:
+            return jsonify(Error="Parts Not Found "), 404
+        else:
+            Parts = self.build_parts_dict(row)
+            return jsonify(Parts=Parts)
+        
+    def getPartsByResourceID(self, resourceid):
+        dao = PartsDAO()
+        row = dao.getPartsByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Parts Not Found "), 404
+        else:
+            Parts = self.build_parts_dict(row)
+            return jsonify(Parts=Parts)
+
+    def getResourceIDByPartsID(self, Partsid):
+        dao = PartsDAO()
+        row = dao.getResourceIDByPartsID(Partsid)
         if not row:
             return jsonify(Error="Parts Not Found "), 404
         else:

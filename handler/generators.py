@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.generators import GeneratorsDAO
 
 
-class ResourceHandler:
+class GeneratorsHandler:
     def build_generators_dict(self, row):
         result = {}
         result['GeneratorID'] = row[0]
@@ -38,6 +38,24 @@ class ResourceHandler:
         else:
             generator = self.build_generators_dict(row)
             return jsonify(Generator=generator)
+
+    def getGeneratorsByResourceID(self, resourceid):
+        dao = GeneratorsDAO()
+        row = dao.getGeneratorByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Generators Not Found "), 404
+        else:
+            Generators = self.build_generators_dict(row)
+            return jsonify(Generators=Generators)
+
+    def getResourceIDByGeneratorsID(self, Generatorsid):
+        dao = GeneratorsDAO()
+        row = dao.getResourceIDByGeneratorID(Generatorsid)
+        if not row:
+            return jsonify(Error="Generators Not Found "), 404
+        else:
+            Generators = self.build_generators_dict(row)
+            return jsonify(Generators=Generators)
 
     def searchGenerators(self, args):
         supplierid = args.get("SupplierID")

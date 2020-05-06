@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.dryfood import DryFoodDAO
 
 
-class ResourceHandler:
+class DryFoodHandler:
     def build_dryfood_dict(self, row):
         result = {}
         result['DFoodID'] = row[0]
@@ -50,6 +50,25 @@ class ResourceHandler:
             result = self.build_dryfood_dict(row)
             result_list.append(result)
         return jsonify(dryfood=result_list)
+    
+    def getDryFoodByResourceID(self, resourceid):
+        dao = DryFoodDAO()
+        row = dao.getDFoodByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="DryFood Not Found "), 404
+        else:
+            DFood = self.build_dryfood_dict(row)
+            return jsonify(DFood=DFood)
+
+    def getResourceIDByDryFoodID(self, DFoodid):
+        dao = DryFoodDAO()
+        row = dao.getResourceIDByDFoodID(DFoodid)
+        if not row:
+            return jsonify(Error="DryFood Not Found "), 404
+        else:
+            DFood = self.build_dryfood_dict(row)
+            return jsonify(DFood=DFood)
+
 
     def insertDFood(self, form):
         print("form: ", form)

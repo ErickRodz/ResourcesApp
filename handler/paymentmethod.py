@@ -98,7 +98,7 @@ class PaymentMethodHandler:
 
     def insertCardJson(self, json):
         userid = json['UserID']
-        bankid = json['ResourceID']
+        bankid = json['BankID']
         cardtype = json['CardType']
         cardnumber = json['CardNumber']
         if userid and bankid and cardtype and cardnumber:

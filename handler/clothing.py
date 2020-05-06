@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.clothing import ClothingDAO
 
 
-class ResourceHandler:
+class ClothingHandler:
     def build_clothing_dict(self, row):
         result = {}
         result['Clothingid'] = row[0]
@@ -55,6 +55,25 @@ class ResourceHandler:
             result = self.build_clothing_dict(row)
             result_list.append(result)
         return jsonify(Clothing=result_list)
+    
+    def getClothingByResourceID(self, resourceid):
+        dao = ClothingDAO()
+        row = dao.getClothingByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Clothing Not Found "), 404
+        else:
+            Clothing = self.build_clothing_dict(row)
+            return jsonify(Clothing=Clothing)
+
+    def getResourceIDByClothingID(self, Clothingid):
+        dao = ClothingDAO()
+        row = dao.getResourceIDByClothingID(Clothingid)
+        if not row:
+            return jsonify(Error="Clothing Not Found "), 404
+        else:
+            Clothing = self.build_clothing_dict(row)
+            return jsonify(Clothing=Clothing)
+
 
     def insertClothing(self, form):
         print("form: ", form)

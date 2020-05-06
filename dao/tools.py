@@ -5,7 +5,7 @@ from config.dbconfig import pg_config
 
 class ToolsDAO:
     def _init_(self):
-        connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
+        connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
 
@@ -42,7 +42,7 @@ class ToolsDAO:
         for row in cursor:
             result.append(row)
         return result
-    
+
     def getToolsByColor(self, toolcolor):
         cursor = self.conn.cursor()
         query = "select * from Tools where toolcolor = %s;"
@@ -70,16 +70,23 @@ class ToolsDAO:
             result.append(row)
         return result
 
-    #def getSupplierByBatteryID(self, batteryid):
-        #cursor = self.conn.cursor()
-        #query = "select supplierid from Suppliers natural inner join Resources where resourceid = %s;"
-        #cursor.execute(query, (batteryid,))
-        #result = cursor.fetchone()
-        #return result
+    def getResourceIDByToolID(self, toolid):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Resources natural inner join Tools where toolid = %s;"
+        cursor.execute(query, (toolid,))
+        result = cursor.fetchone()
+        return result
+
+    def getToolByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Tool where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
 
     def getToolsByName(self, toolname):
         cursor = self.conn.cursor()
-        query = "select * from Tools where toolname = %s;" #doubt
+        query = "select * from Tools where toolname = %s;"  # doubt
         cursor.execute(query, (toolname,))
         result = []
         for row in cursor:

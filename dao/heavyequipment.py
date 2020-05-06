@@ -41,6 +41,12 @@ class HeavyEquipmentDAO:
         result = cursor.fetchone()
         return result
 
+    def getHeavyEqByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join HeavyEquipment where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
 
     def insert(self, resourceid, heavyeqbrand, heavyeqdescription):
         cursor = self.conn.cursor()

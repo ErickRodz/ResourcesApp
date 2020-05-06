@@ -25,7 +25,7 @@ class CategoriesDAO:
     #duda con el get attribute by resource id con el query, pienso que hay que hacer un join en alguna parte
     def getCategoryByResourceId(self, resourceid):
         cursor = self.conn.cursor()
-        query = "select * from Categories where resourceid = %s;"
+        query = "select categoryname from Categories where resourceid = %s;"
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result
@@ -38,6 +38,14 @@ class CategoriesDAO:
         for row in cursor:
             result.append(row)
         return result
+
+        # 9 in the Email Part 1
+    #def getCategoryNameByResourceID(self, ResourceID):
+     #   cursor = self.conn.cursor()
+      #  query = "select categoryname from Categories where resourceid = %s;"
+       # cursor.execute(query, (ResourceID,))
+        #result = cursor.fetchone()
+        #return result
 
 
     def insert(self, resourceid, supplierid, categoryname):

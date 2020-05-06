@@ -41,6 +41,13 @@ class WaterDAO:
         result = cursor.fetchone()
         return result
 
+    def getWaterByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Water where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def getWaterBySupplierAndSize(self, supplierid, watersize):
         cursor = self.conn.cursor()
         query = "select * from Resources natural inner join Water where suppleirid = %s && watersize = %s;"

@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.batteries import BatteriesDAO
 
 
-class ResourceHandler:
+class BatteriesHandler:
     def build_batteries_dict(self, row):
         result = {}
         result['batteryid'] = row[0]
@@ -53,6 +53,24 @@ class ResourceHandler:
             result = self.build_batteries_dict(row)
             result_list.append(result)
         return jsonify(Batteries=result_list)
+    
+    def getBatteriesByResourceID(self, resourceid):
+        dao = BatteriesDAO()
+        row = dao.getBatteryByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Battery Not Found "), 404
+        else:
+            Battery = self.build_batteries_dict(row)
+            return jsonify(Battery=Battery)
+
+    def getResourceIDByBatteryID(self, Batteryid):
+        dao = BatteriesDAO()
+        row = dao.getResourceIDByBatteryID(Batteryid)
+        if not row:
+            return jsonify(Error="Battery Not Found "), 404
+        else:
+            Battery = self.build_batteries_dict(row)
+            return jsonify(Battery=Battery)
 
     def insertBattery(self, form):
         print("form: ", form)

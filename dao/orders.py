@@ -15,6 +15,15 @@ class OrdersDAO:
             result.append(row)
         return result
 
+    def getOrderByOrderType(self, ordertype):
+        cursor = self.conn.cursor()
+        query = "select * from Orders where ordertype = %s;"
+        cursor.execute(query, (ordertype,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def getOrderById(self, orderid):
         cursor = self.conn.cursor()
         query = "select * from Orders where orderid = %s;"
@@ -88,6 +97,15 @@ class OrdersDAO:
         result = cursor.fetchone()
         return result
 
+    def getRequestsByOrderID(self, OrderID):
+        cursor = self.conn.cursor()
+        query = "select * from Orders natural inner join Resources where totalquantity = 0 and totalprice = 0 and orderid = %s;"
+        cursor.execute(query, (OrderID,))
+        result =[]
+        for row in cursor:
+            result.append(row)
+        return result
+
     def getResourceQuantityByResourceId(self, resourceid):
         cursor = self.conn.cursor()
         query = "select resourcequantity from Resources natural inner join Orders where resourceid = %s;"
@@ -129,10 +147,52 @@ class OrdersDAO:
              result.append(row)
          return result
 
-    def insert(self, userid, cardid, cartid, resourceid,  totalprice, totalquantity, resourcename):
+    def getReceiptsFromOrdersByCartIdAndOrderType(self, cartid, ordertype):
+         cursor = self.conn.cursor()
+         query = "select * from Orders where cartid  = %s and ordertype = %s;"
+         cursor.execute(query, (cartid, ordertype,))
+         result = []
+         for row in cursor:
+             result.append(row)
+         return result
+
+    def getReceiptsFromOrdersByUserIdAndOrderType(self, userid, ordertype):
+         cursor = self.conn.cursor()
+         query = "select * from Orders where userid = %s and ordertype = %s;"
+         cursor.execute(query, (userid, ordertype,))
+         result = []
+         for row in cursor:
+             result.append(row)
+         return result
+
+    def getCategoryNameByResourceId(self, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Orders(userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename) values (%s, %s, %s, %s, %s, %s, %s) returning orderid;"
-        cursor.execute(query, (userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename,))
+        query = "select categoryname from Categories natural inner join Orders where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
+    def getResourcesByOrderType(self, ordertype, categoryname):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Orders natural inner join Categories where ordertype = %s and categoryname = %s order by resourcename;"
+        cursor.execute(query, (ordertype, categoryname,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourceIdByResourceName(self, resourcename):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Orders where resourcename = %s;"
+        cursor.execute(query, (resourcename,))
+        result = []
+        result = cursor.fetchone()
+        return result
+
+    def insert(self, totalprice, totalquantity, userid, cardid, cartid, resourceid,  resourcename, ordertype):
+        cursor = self.conn.cursor()
+        query = "insert into Orders(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename, ordertype) values (%s, %s, %s, %s, %s, %s, %s, %s) returning orderid;"
+        cursor.execute(query, (totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename, ordertype))
         orderid = cursor.fetchone()[0]
         self.conn.commit()
         return orderid

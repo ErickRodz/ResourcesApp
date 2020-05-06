@@ -37,6 +37,7 @@ class BankHandler:
             banks = self.build_bank_dict(row)
             return jsonify(Banks = banks)
 
+
     def searchBanks(self, args):
         cardid = args.get("CardID")
         userid = args.get("UserID")

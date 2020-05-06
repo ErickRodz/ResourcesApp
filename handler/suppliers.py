@@ -10,28 +10,24 @@ class SuppliersHandler:
         result['Password'] = row[2]
         result['Email'] = row[3]
         result['SLocation'] = row[4]
-        result['Affiliation'] = row[5]
-        result['FirstName'] = row[6]
-        result['LastName'] = row[7]
-        result['DateofBirth'] = row[8]
-        result['Gender'] = row[9]
-        result['CategoryID'] = row[10]
-        result['CategoryName'] = row[11]
+        result['FirstName'] = row[5]
+        result['LastName'] = row[6]
+        result['DateofBirth'] = row[7]
+        result['Gender'] = row[8]
+        result['CategoryName'] = row[9]
         return result
 
-    def build_suppliers_attributes(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
+    def build_suppliers_attributes(self, SupplierID, UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName):
         result = {}
         result['SupplierID'] = SupplierID
         result['UserName'] = UserName
         result['Password'] = Password
         result['Email'] = Email
         result['SLocation'] = SLocation
-        result['Affiliation'] = Affiliation
         result['FirstName'] = FirstName
         result['LastName'] = LastName
         result ['DateofBirth'] = DateofBirth
         result ['Gender'] = Gender
-        result ['CategoryID'] = CategoryID
         result ['CategoryName'] = CategoryName
         return result
 
@@ -58,12 +54,10 @@ class SuppliersHandler:
         password = args.get("Password")
         email = args.get("Email")
         slocation = args.get("SLocation")
-        affiliation = args.get("Affiliation")
         firstname = args.get("FirstName")
         lastname = args.get("LastName")
         dateofbirth = args.get("DateofBirth")
         gender = args.get("Gender")
-        categoryid = args.get("CategoryID")
         categoryname = args.get("CategoryName")
         dao = SuppliersDAO()
 
@@ -76,8 +70,6 @@ class SuppliersHandler:
             suppliers_list = dao.getSupplierrByEmail(email)
         elif(len(args) == 1) and slocation:
             suppliers_list = dao.getSupplierbyLocation(slocation)
-        elif(len(args) == 1) and affiliation:
-            suppliers_list = dao.getSupplierbyAffiliation(affiliation)
         elif(len(args) ==1) and categoryname:
             suppliers_list = dao.getSupplierAndResourcesByCategoryName(categoryname)
         else:
@@ -90,24 +82,22 @@ class SuppliersHandler:
 
     def insertSupplier(self, form):
         print("form: ", form)
-        if len(form) != 11:
+        if len(form) != 9:
             return jsonify(Error = "Malformed post request"), 400
         else:
             username = form['UserName']
             password = form['Password']
             email = form['Email']
             slocation = form['SLocation']
-            affiliation = form['Affiliation']
             firstname = form['FirstName']
             lastname = form['LastName']
             dateofbirth = form['DateofBirth']
             gender = form['Gender']
-            categoryid = form['CategoryID']
             categoryname = form['CategoryName']
-            if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
+            if  username and password and email and slocation and firstname and lastname and dateofbirth and gender and categoryname:
                 dao = SuppliersDAO()
-                supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
-                result = self.build_users_attributes(supplierid, username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
+                supplierid = dao.insert(username, password, email, slocation, firstname, lastname, dateofbirth,gender, categoryname)
+                result = self.build_suppliers_attributes(supplierid, username, password, email, slocation, firstname, lastname, dateofbirth,gender, categoryname)
                 return jsonify(Suppliers=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -117,17 +107,15 @@ class SuppliersHandler:
         password = json['Password']
         email = json['Email']
         slocation = json['SLocation']
-        affiliation = json['Affiliation']
         firstname = json['FirstName']
         lastname = json['LastName']
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
-        categoryid = json['CategoryID']
         categoryname = json['CategoryName']
-        if  username and password and email and slocation and affiliation and firstname and lastname and dateofbirth and gender and categoryid and categoryname:
+        if  username and password and email and slocation and firstname and lastname and dateofbirth and gender and categoryname:
             dao = SuppliersDAO()
-            supplierid = dao.insert(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
-            result = self.build_suppliers_attributes(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth,gender, categoryid, categoryname)
+            supplierid = dao.insert(username, password, email, slocation, firstname, lastname, dateofbirth,gender, categoryname)
+            result = self.build_suppliers_attributes(supplierid, username, password, email, slocation, firstname, lastname, dateofbirth,gender,categoryname)
             return jsonify(Suppliers=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400

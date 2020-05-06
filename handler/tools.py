@@ -6,19 +6,19 @@ class ToolsHandler:
     def build_tools_dict(self, row):
         result = {}
         result['toolid'] = row[0]
-        result['resourceid'] = row[1]
-        result['toolmaterial'] = row[2]
-        result['toolcolor'] = row[3]
-        result['tooldescription'] = row[4]
+        result['toolmaterial'] = row[1]
+        result['toolcolor'] = row[2]
+        result['tooldescription'] = row[3]
+        result['resourceid'] = row[4]
         return result
 
-    def build_tools_attributes(self, toolid, resourceid, toolmaterial, toolcolor, tooldescription):
+    def build_tools_attributes(self, toolid, toolmaterial, toolcolor, tooldescription, resourceid):
         result = {}
         result['toolid'] = toolid
-        result['resourceid'] = resourceid
         result['toolmaterial'] = toolmaterial
         result['toolcolor'] = toolcolor
         result['tooldescription'] = tooldescription
+        result['resourceid'] = resourceid
         return result
            
     def getAllTools(self):
@@ -38,6 +38,24 @@ class ToolsHandler:
         else:
             tool = self.build_tools_dict(row)
             return jsonify(Tool=tool)
+        
+    def getToolsByResourceID(self, resourceid):
+        dao = ToolsDAO()
+        row = dao.getToolByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Tool Not Found "), 404
+        else:
+            Tool = self.build_tools_dict(row)
+            return jsonify(Tool=Tool)
+
+    def getResourceIDByToolID(self, Toolid):
+        dao = ToolsDAO()
+        row = dao.getResourceIDByToolID(Toolid)
+        if not row:
+            return jsonify(Error="Tool Not Found "), 404
+        else:
+            Tool = self.build_tools_dict(row)
+            return jsonify(Tool=Tool)
     
     def searchTools(self, args):
         # resourceid = args.get('resourceid')

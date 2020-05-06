@@ -6,17 +6,17 @@ class MedicineHandler:
     def build_medicine_dict(self, row):
         result = {}
         result['medid'] = row[0]
-        result['resourceid'] = row[1]
-        result['meddose'] = row[2]
-        result['meddescription'] = row[3]
+        result['meddose'] = row[1]
+        result['meddescription'] = row[2]
+        result['resourceid'] = row[3]
         return result
 
-    def build_medicine_attributes(self, medid, resourceid, meddose, meddescription):
+    def build_medicine_attributes(self, medid, meddose, meddescription, resourceid):
         result = {}
         result['medid'] = medid
-        result['resourceid'] = resourceid
         result['meddose'] = meddose
         result['meddescription'] = meddescription
+        result['resourceid'] = resourceid
         return result
 
     def getAllMedicine(self):
@@ -36,6 +36,24 @@ class MedicineHandler:
         else:
             medicine = self.build_medicine_dict(row)
             return jsonify(Medicine=medicine)
+        
+    def getMedicineByResourceID(self, resourceid):
+        dao = MedicineDAO()
+        row = dao.getMedicineByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Medicine Not Found "), 404
+        else:
+            Medicine = self.build_medicine_dict(row)
+            return jsonify(Medicine=Medicine)
+
+    def getResourceIDByMedicineID(self, Medicineid):
+        dao = MedicineDAO()
+        row = dao.getResourceIDByMedicineID(Medicineid)
+        if not row:
+            return jsonify(Error="Medicine Not Found "), 404
+        else:
+            Medicine = self.build_medicine_dict(row)
+            return jsonify(Medicine=Medicine)
     
     def searchMedecine(self, args):
         meddose = args.get('meddose')

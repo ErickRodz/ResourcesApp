@@ -2,9 +2,8 @@ from config.dbconfig import pg_config
 import psycopg2
 
 class SuppliersDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
-
         self.conn = psycopg2.connect(connection_url)
 
     def getAllSuppliers(self):
@@ -50,14 +49,13 @@ class SuppliersDAO:
             result.append(row)
         return result
 
-    def getSupplierbyAffiliation(self, Affiliation):
-        cursor = self.conn.cursor()
-        query = "select * from Suppliers where affiliation = %s;"
-        cursor.execute(query, (Affiliation,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
+    #def getSupplierbyAffiliation(self, Affiliation):
+   #     cursor = self.conn.cursor()
+    #    query = "select * from Suppliers where affiliation = %s;"
+     #  result = []
+       # for row in cursor:
+        #    result.append(row)
+        #return result
 
     def getSupplierbyUserNameandPassword(self, UserName, Password):
         cursor = self.conn.cursor()
@@ -77,10 +75,10 @@ class SuppliersDAO:
             result.append(row)
         return result
 
-    def insert(self, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
+    def insert(self, UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName):
         cursor = self.conn.cursor()
-        query = "insert into Suppliers(username, password, email, slocation, affiliation, firstname, lastname, dateofbirth, gender, categoryid, categoryname) values (%s, %s, %s, %s, %s, %s, %s %s, %s, %s, %s) returning supplierid;"
-        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender ,CategoryID, CategoryName,))
+        query = "insert into Suppliers(username, password, email, slocation, firstname, lastname, dateofbirth, gender, categoryname) values (%s, %s, %s, %s, %s %s, %s, %s, %s) returning supplierid;"
+        cursor.execute(query, (UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName,))
         supplierid = cursor.fetchone()[0]
         self.conn.commit()
         return supplierid
@@ -92,9 +90,9 @@ class SuppliersDAO:
         self.conn.commit()
         return SupplierID
 
-    def update(self, SupplierID, UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth, Gender, CategoryID, CategoryName):
+    def update(self, SupplierID, UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName):
         cursor = self.conn.cursor()
-        query = "update suppliers set username = %s, password = %s, email = %s, slocation = %s, affiliation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s, categoryid = %s, categoryname = %s where supplierid = %s;"
-        cursor.execute(query, (UserName, Password, Email, SLocation, Affiliation, FirstName, LastName, DateofBirth,Gender, CategoryID, CategoryName, SupplierID,))
+        query = "update suppliers set username = %s, password = %s, email = %s, slocation = %s, firstname = %s, lastname = %s, dateofbirth = %s, gender = %s, categoryname = %s where supplierid = %s;"
+        cursor.execute(query, (UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth,Gender, CategoryName, SupplierID,))
         self.conn.commit()
         return SupplierID

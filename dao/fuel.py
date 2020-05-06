@@ -41,6 +41,13 @@ class FuelDAO:
         result = cursor.fetchone()
         return result
 
+    def getFuelByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Fuel where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def insert(self,Fueltype, Fueloctenage, Fueldescription, resourceid):
         cursor = self.conn.cursor()
         query = "insert into Fuel(Fueltype, Fueloctenage, Fueldescription, resourceid) values (%s, %s, %s, %s) returning Fuelid;"

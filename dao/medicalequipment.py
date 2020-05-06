@@ -59,6 +59,20 @@ class MedicalEquipmentDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getResourceIDByMedEqID(self, medeqid):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Resources natural inner join MedicalEquipment where medeqid = %s;"
+        cursor.execute(query, (medeqid,))
+        result = cursor.fetchone()
+        return result
+
+    def getMedEqByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join MedicalEquipment where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
     
     def insert(self, resourceid, medeqbrand, medeqdescription):
         cursor = self.conn.cursor()

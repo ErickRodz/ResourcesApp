@@ -6,17 +6,17 @@ class MedicalEquipmentHandler:
     def build_medicalequipment_dict(self, row):
         result = {}
         result['medeqid'] = row[0]
-        result['resourceid'] = row[1]
-        result['medeqbrand'] = row[2]
-        result['medeqdescription'] = row[3]
+        result['medeqbrand'] = row[1]
+        result['medeqdescription'] = row[2]
+        result['resourceid'] = row[3]
         return result
     
-    def build_medicalequipment_attributes(self, medeqid, resourceid, medeqbrand, medeqdescription):
+    def build_medicalequipment_attributes(self, medeqid, medeqbrand, medeqdescription, resourceid):
         result = {}
         result['medeqid'] = medeqid
-        result['resourceid'] = resourceid
         result['medeqbrand'] = medeqbrand
         result['medeqdescription'] = medeqdescription
+        result['resourceid'] = resourceid
         return result
     
     def getAllMedicalEquipment(self):
@@ -36,6 +36,25 @@ class MedicalEquipmentHandler:
         else:
             medeq = self.build_medicalequipment_dict(row)
             return jsonify(MedEq=medeq)
+        
+    def getMedicalEquipmentByResourceID(self, resourceid):
+        dao = MedicalEquipmentDAO()
+        row = dao.getMedEqByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="MedicalEq Not Found "), 404
+        else:
+            MedicalEq = self.build_medicalequipment_dict(row)
+            return jsonify(MedicalEq=MedicalEq)
+
+    def getResourceIDByMedicalEqID(self, MedicalEqid):
+        dao = MedicalEquipmentDAO()
+        row = dao.getResourceIDByMedEqID(MedicalEqid)
+        if not row:
+            return jsonify(Error="MedicalEq Not Found "), 404
+        else:
+            MedicalEq = self.build_medicalequipment_dict(row)
+            return jsonify(MedicalEq=MedicalEq)
+
     
     def searchMedicalEquipment(self, args):
         # resourceid = args.get('resourceid')

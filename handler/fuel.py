@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.fuel import FuelDAO
 
 
-class ResourceHandler:
+class FuelHandler:
     def build_fuel_dict(self, row):
         result = {}
         result['Fuelid'] = row[0]
@@ -39,6 +39,25 @@ class ResourceHandler:
         else:
             Fuel = self.build_fuel_dict(row)
             return jsonify(Fuel=Fuel)
+
+    def getFuelByResourceID(self, resourceid):
+        dao = FuelDAO()
+        row = dao.getFuelByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Fuel Not Found "), 404
+        else:
+            Fuel = self.build_fuel_dict(row)
+            return jsonify(Fuel=Fuel)
+
+    def getResourceIDByFuelID(self, Fuelid):
+        dao = FuelDAO()
+        row = dao.getResourceIDByFuelID(Fuelid)
+        if not row:
+            return jsonify(Error="Fuel Not Found "), 404
+        else:
+            Fuel = self.build_fuel_dict(row)
+            return jsonify(Fuel=Fuel)
+
 
     def searchFuel(self, args):
         supplierid = args.get("supplierid")
@@ -116,9 +135,9 @@ class ResourceHandler:
         if not dao.getFuelById(Fuelid):
             return jsonify(Error="Fuel not found."), 404
         else:
-            Fueltype = form['FuelType']
-            Fueloctenage = form['FuelOctenage']
-            Fueldescription = form['FuelDescription']
+            Fueltype = json['FuelType']
+            Fueloctenage = json['FuelOctenage']
+            Fueldescription = json['FuelDescription']
             if Fueltype and Fueloctenage and Fueldescription:
                 dao.update(Fuelid, Fueltype, Fueloctenage, Fueldescription)
                 resourceid = dao.getResourceIDByFuelID(Fuelid)

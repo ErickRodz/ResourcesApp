@@ -41,6 +41,14 @@ class BatteriesDAO:
         result = cursor.fetchone()
         return result
 
+    def getBatteryByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Batteries where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
+
     def insert(self, batterybrand, batterytype, batterydescription, resourceid):
         cursor = self.conn.cursor()
         query = "insert into Batteries(batterybrand, batterytype, batterydescription, resourceid) values (%s, %s, %s, %s) returning batteryid;"

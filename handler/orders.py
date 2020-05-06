@@ -6,25 +6,27 @@ class OrdersHandler:
     def build_orders_dict(self, row):
         result = {}
         result['orderid'] = row[0]
-        result['userid'] = row[1]
-        result['cardid'] = row[2]
-        result['cartid'] = row[3]
-        result['resourceid'] = row[4]
-        result['totalprice'] = row[5]
-        result['totalquantity'] = row[6]
+        result['totalprice'] = row[1]
+        result['totalquantity'] = row[2]
+        result['userid'] = row[3]
+        result['cardid'] = row[4]
+        result['cartid'] = row[5]
+        result['resourceid'] = row[6]
         result['resourcename'] = row[7]
+        result['ordertype'] = row[8]
         return result
 
-    def build_orders_attributes(self, orderid, userid, cardid, cartid, resourceid, totalprice, totalquantity, resourcename):
+    def build_orders_attributes(self, orderid, totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename, ordertype):
         result = {}
         result['orderid'] = orderid
+        result['totalprice'] = totalprice
+        result['totalquantity'] = totalquantity
         result['userid'] = userid
         result['cardid'] = cardid
         result['cartid'] = cartid
         result['resourceid'] = resourceid
-        result['totalprice'] = totalprice
-        result['totalquantity'] = totalquantity
         result['resourcename'] = resourcename
+        result['ordertype'] = ordertype
         return result
 
     def getAllOrders(self):
@@ -47,9 +49,61 @@ class OrdersHandler:
             order = self.build_orders_dict(row)
             return jsonify(Order=order)
 
+    def getOrdersByOrderType(self, ordertype):
+        dao = OrdersDAO()
+        request_list = dao.getOrderByOrderType(ordertype)
+        result_list = []
+        for row in request_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
+
+    def getRequestByOrderID(self, orderid):
+        dao = OrdersDAO()
+        request_list = dao.getRequestsByOrderID(orderid)
+        result_list = []
+        for row in request_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
+
     def getRequestedResourcesByResourceName(self, resorcename):
         dao = OrdersDAO()
         requests_list = dao.getResourcesRequestByResourceName(resorcename)
+        result_list = []
+        for row in requests_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
+
+    def getReciptsByCartIdAndOrderType(self, cartid, ordertype):
+        dao = OrdersDAO()
+        requests_list = dao.getReceiptsFromOrdersByCartIdAndOrderType(cartid, ordertype)
+        result_list = []
+        for row in requests_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
+
+    def getReciptsByUserIdAndOrderType(self, userid, ordertype):
+        dao = OrdersDAO()
+        requests_list = dao.getReceiptsFromOrdersByUserIdAndOrderType(userid, ordertype)
+        result_list = []
+        for row in requests_list:
+            result = self.build_orders_dict(row)
+            result_list.append(result)
+
+        return jsonify(Orders=result_list)
+
+    def getResourcesOrderedByCategory(self, ordertype, resourcename):
+        dao = OrdersDAO()
+        resourceid = dao.getResourceIdByResourceName(resourcename)
+        categoryname = dao.getCategoryNameByResourceId(resourceid)
+        requests_list = dao.getResourcesByOrderType(ordertype, categoryname)
         result_list = []
         for row in requests_list:
             result = self.build_orders_dict(row)
@@ -62,6 +116,7 @@ class OrdersHandler:
         cardid = args.get('cardid')
         cartid = args.get('cartid')
         resourceid = args.get('resourceid')
+        ordertype = args.get('ordertype')
         dao = OrdersDAO()
         orders_list = []
         if (len(args) == 2) and userid and resourceid:
@@ -85,45 +140,86 @@ class OrdersHandler:
         return jsonify(Orders=result_list)
 
     def insertOrders(self, form):
-        if len(form) != 5 :
+        if len(form) != 8 :
             return jsonify(Error="Malformed post request")
-        resourceid = form['resourceid']
+        totalprice = form['totalprice']
+        totalquantity = form['totalquantity']
         userid = form['userid']
         cardid = form['cardid']
         cartid = form['cartid']
-        totalquantity = form['totalquantity']
-        if resourceid and userid and cardid and cartid and totalquantity:
+        resourceid = form['resourceid']
+        resourcename = form['resourcename']
+        ordertype = form['ordertype']
+        if resourceid and userid and cardid and cartid and totalquantity and ordertype and totalprice:
             dao = OrdersDAO()
             resourcequantity = dao.getResourceQuantityByResourceId(resourceid)
             if totalquantity>resourcequantity:
                 return jsonify(Error="Inserted quantity exceeds the resources current stock")
+            elif ordertype == 'Request':
+                totalquantity = 0
+                totalprice = 0
+                orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename, ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
+                                                      resourceid, resourcename, ordertype)
+                return jsonify(Order=result), 201
+            elif ordertype == 'Reservation':
+                totalprice = 0
+                orderid = dao.insert(totalprice, totalquantity,userid, cardid, cartid, resourceid, resourcename, ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity,userid, cardid, cartid, resourceid, resourcename, ordertype)
+                newquantity = resourcequantity - totalquantity
+                dao.updateResourceQuantity(newquantity, resourceid)
+                return jsonify(Order=result), 201
             else:
                 resourceprice = dao.getResourcePriceByResourceId(resourceid)
                 totalprice = totalquantity*resourceprice
-                orderid = dao.insert(userid, cardid, cartid, resourceid, totalprice, totalprice)
-                result = self.build_orders_attributes(orderid, userid, cardid, cartid,
-                                                    resourceid, totalprice, totalquantity)
+                orderid = dao.insert(totalprice, totalquantity,userid, cardid, cartid, resourceid, resourcename, ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity,userid, cardid, cartid, resourceid, resourcename, ordertype)
+                newquantity = resourcequantity - totalquantity
+                dao.updateResourceQuantity(newquantity, resourceid)
                 return jsonify(Order=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertOrderJson(self, json):
-        resourceid = json['resourceid']
+        totalprice = json['totalprice']
+        totalquantity = json['totalquantity']
         userid = json['userid']
         cardid = json['cardid']
         cartid = json['cartid']
-        totalquantity = json['totalquantity']
-        if resourceid and userid and cardid and cartid and totalquantity:
+        resourceid = json['resourceid']
+        resourcename = json['resourcename']
+        ordertype = json['ordertype']
+        if resourceid and userid and cardid and cartid and totalquantity and ordertype and totalprice:
             dao = OrdersDAO()
             resourcequantity = dao.getResourceQuantityByResourceId(resourceid)
             if totalquantity > resourcequantity:
                 return jsonify(Error="Inserted quantity exceeds the resources current stock")
+            elif ordertype == 'Request':
+                totalquantity = 0
+                totalprice = 0
+                orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename,
+                                     ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
+                                                      resourceid, resourcename, ordertype)
+                return jsonify(Order=result), 201
+            elif ordertype == 'Reservation':
+                totalprice = 0
+                orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename,
+                                     ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
+                                                      resourceid, resourcename, ordertype)
+                newquantity = resourcequantity - totalquantity
+                dao.updateResourceQuantity(newquantity, resourceid)
+                return jsonify(Order=result), 201
             else:
                 resourceprice = dao.getResourcePriceByResourceId(resourceid)
                 totalprice = totalquantity * resourceprice
-                orderid = dao.insert(userid, cardid, cartid, resourceid, totalprice, totalprice)
-                result = self.build_orders_attributes(orderid, userid, cardid, cartid,
-                                                      resourceid, totalprice, totalquantity)
+                orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename,
+                                     ordertype)
+                result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
+                                                      resourceid, resourcename, ordertype)
+                newquantity = resourcequantity - totalquantity
+                dao.updateResourceQuantity(newquantity, resourceid)
                 return jsonify(Order=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

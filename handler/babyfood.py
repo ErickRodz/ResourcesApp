@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.babyfood import BabyFoodDAO
 
 
-class ResourceHandler:
+class BabyFoodHandler:
     def build_babyfood_dict(self, row):
         result = {}
         result['bfoodid'] = row[0]
@@ -36,6 +36,25 @@ class ResourceHandler:
         else:
             bfood = self.build_babyfood_dict(row)
             return jsonify(BFood=bfood)
+
+    def getBabyFoodByResourceID(self, resourceid):
+        dao = BabyFoodDAO()
+        row = dao.getBFoodByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="BabyFood Not Found "), 404
+        else:
+            bfood = self.build_babyfood_dict(row)
+            return jsonify(BFood=bfood)
+
+    def getResourceIDByBabyFoodID(self, bfoodid):
+        dao = BabyFoodDAO()
+        row = dao.getResourceIDByBFoodID(bfoodid)
+        if not row:
+            return jsonify(Error="BabyFood Not Found "), 404
+        else:
+            bfood = self.build_babyfood_dict(row)
+            return jsonify(BFood=bfood)
+
 
     def searchBabyFood(self, args):
         supplierid = args.get("supplierid")

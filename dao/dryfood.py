@@ -41,12 +41,12 @@ class DryFoodDAO:
         result = cursor.fetchone()
         return result
 
-    #def getSupplierByBatteryID(self, batteryid):
-        #cursor = self.conn.cursor()
-        #query = "select supplierid from Suppliers natural inner join Resources where resourceid = %s;"
-        #cursor.execute(query, (batteryid,))
-        #result = cursor.fetchone()
-        #return result
+    def getDFoodByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Food where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
 
     def insert(self, resourceid, dfoodserving, dfooddescription):
         cursor = self.conn.cursor()

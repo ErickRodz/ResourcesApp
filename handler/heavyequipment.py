@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.heavyequipment import HeavyEquipmentDAO
 
 
-class ResourceHandler:
+class HeavyEquipmentHandler:
     def build_heavyequipment_dict(self, row):
         result = {}
         result['HeavyEquipmentid'] = row[0]
@@ -32,6 +32,24 @@ class ResourceHandler:
     def getHeavyEquipmentByID(self, HeavyEquipmentid):
         dao = HeavyEquipmentDAO()
         row = dao.getHeavyEquipmentById(HeavyEquipmentid)
+        if not row:
+            return jsonify(Error="HeavyEquipment Not Found "), 404
+        else:
+            HeavyEquipment = self.build_heavyequipment_dict(row)
+            return jsonify(HeavyEquipment=HeavyEquipment)
+
+    def getHeavyEquipmentByResourceID(self, resourceid):
+        dao = HeavyEquipmentDAO()
+        row = dao.getHeavyEqByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="HeavyEquipment Not Found "), 404
+        else:
+            HeavyEquipment = self.build_heavyequipment_dict(row)
+            return jsonify(HeavyEquipment=HeavyEquipment)
+
+    def getResourceIDByHeavyEquipmentID(self, HeavyEquipmentid):
+        dao = HeavyEquipmentDAO()
+        row = dao.getResourceIDByHeavyEqID(HeavyEquipmentid)
         if not row:
             return jsonify(Error="HeavyEquipment Not Found "), 404
         else:

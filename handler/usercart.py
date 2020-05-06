@@ -46,6 +46,15 @@ class UserCartHandler:
             carts = self.build_usercart_dict(row)
             return jsonify(Carts=carts)
 
+    def getResourcesByCartId(self, CartID):
+        dao = UserCartDAO()
+        row = dao.getResourcesByCartId(CartID)
+        if not row:
+            return jsonify(Error="Cart not found"), 404
+        else:
+            carts = self.build_usercart_dict(row)
+            return jsonify(Carts=carts)
+
 
     def searchUserCarts(self, args):
         cartid = args.get("CartID")

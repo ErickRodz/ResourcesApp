@@ -6,17 +6,17 @@ class IceHandler:
     def build_ice_dict(self, row):
         result = {}
         result['iceid'] = row[0]
-        result['resourceid'] = row[1]
-        result['icesize'] = row[2]
-        result['icedescription'] = row[3]
+        result['icesize'] = row[1]
+        result['icedescription'] = row[2]
+        result['resourceid'] = row[3]
         return result
     
-    def build_ice_attributes(self, iceid, resourceid, icesize, icedescription):
+    def build_ice_attributes(self, iceid, icesize, icedescription, resourceid):
         result = {}
         result['iceid'] = iceid
-        result['resourceid'] = resourceid
         result['icesize'] = icesize
         result['icedescription'] = icedescription
+        result['resourceid'] = resourceid
         return result
     
     def getAllIce(self):
@@ -36,6 +36,25 @@ class IceHandler:
         else:
             ice = self.build_ice_dict(row)
             return ice
+        
+    def getIceByResourceID(self, resourceid):
+        dao = IceDAO()
+        row = dao.getIceByResourceID(resourceid)
+        if not row:
+            return jsonify(Error="Ice Not Found "), 404
+        else:
+            Ice = self.build_ice_dict(row)
+            return jsonify(Ice=Ice)
+
+    def getResourceIDByIceID(self, Iceid):
+        dao = IceDAO()
+        row = dao.getResourceIDByIceID(Iceid)
+        if not row:
+            return jsonify(Error="Ice Not Found "), 404
+        else:
+            Ice = self.build_ice_dict(row)
+            return jsonify(Ice=Ice)
+
         
     def searchIce(self, args):
         icesize = args.get('icesize')

@@ -2,7 +2,7 @@ from flask import jsonify
 from dao.categories import CategoriesDAO
 
 
-class AttributeHandler:
+class CategoriesHandler:
     def build_category_dict(self, row):
         result = {}
         result['categoryid'] = row[0]
@@ -45,6 +45,16 @@ class AttributeHandler:
         else:
             attribute = self.build_category_dict(row)
             return jsonify(Category=attribute)
+
+        # 9 in the Email Part 1
+    #def getCategoryNameByResourceID(self, ResourceID):
+       # dao = CategoriesDAO
+       # row = dao.getCategoryNameByResourceID(ResourceID)
+       # if not row:
+        #    return jsonify (Error="CategoryName not found")
+        #else:
+         #   category = self.build_category_dict(row)
+        #return category
 
     def searchCategories(self, args):
         resourceid = args.get("resourceid")

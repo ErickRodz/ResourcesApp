@@ -34,12 +34,19 @@ class GeneratorsDAO:
             result.append(row)
         return result
 
-    #def getSupplierByBatteryID(self, batteryid):
-        #cursor = self.conn.cursor()
-        #query = "select supplierid from Suppliers natural inner join Resources where resourceid = %s;"
-        #cursor.execute(query, (batteryid,))
-        #result = cursor.fetchone()
-        #return result
+    def getResourceIDByGeneratorID(self, generatorid):
+        cursor = self.conn.cursor()
+        query = "select resourceid from Resources natural inner join Generators where generatorqid = %s;"
+        cursor.execute(query, (generatorid,))
+        result = cursor.fetchone()
+        return result
+
+    def getGeneratorByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Generators where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
 
     #def getGeneratorsByName(self, generatorname):
         #cursor = self.conn.cursor()

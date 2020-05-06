@@ -48,6 +48,13 @@ class CannedFoodDAO:
         result = cursor.fetchone()
         return result
 
+    def getCFoodByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join CannedFood where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def insert(self, cfoodbrand, cfoodserving, cfooddescription, resourceid, ):
         cursor = self.conn.cursor()
         query = "insert into CannedFood(cfoodbrand, cfoodserving, cfooddescription, resourceid) values (%s, %s, %s, %s) returning cfoodid;"

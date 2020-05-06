@@ -41,6 +41,13 @@ class PartsDAO:
         result = cursor.fetchone()
         return result
 
+    def getPartsByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Parts where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def insert(self, Partsmaterial, Partscolor, Partsdescription, resourceid):
         cursor = self.conn.cursor()
         query = "insert into Parts(PartsMaterial, PartsColor, PartsDescription, ResourceID) values (%s, %s, %s, %s) returning Partsid;"

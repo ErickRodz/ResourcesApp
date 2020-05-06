@@ -49,6 +49,15 @@ class UserCartDAO:
             result.append(row)
         return result
 
+    def getResourcesByCartId(self, CartID):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join UserCart where cartid = %s;"
+        cursor.execute(query, (CartID,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def insert(self, UserID, ResourceID, Selection):
         cursor = self.conn.cursor()
         query = "insert into UserCart(userid, resourceid, selection) values (%s, %s,%s) returning cartid;"

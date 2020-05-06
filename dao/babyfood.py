@@ -50,6 +50,13 @@ class BabyFoodDAO:
         result = cursor.fetchone()
         return result
 
+    def getBFoodByResourceID(self, resourceid):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join BabyFood where resourceid = %s;"
+        cursor.execute(query, (resourceid,))
+        result = cursor.fetchone()
+        return result
+
     def insert(self, bfoodflavor, bfooddescription, resourceid):
         cursor = self.conn.cursor()
         query = "insert into BabyFood(bfoodflavor, bfooddescription, resourceid, ) values (%s, %s, %s) returning babyfoodid;"
