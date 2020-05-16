@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class ToolsDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -102,10 +102,10 @@ class ToolsDAO:
             result.append(row)
         return result
 
-    def insert(self, resourceid, toolmaterial, toolcolor, tooldescription):
+    def insert(self, toolmaterial, toolcolor, tooldescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Tools(resourceid, toolname, toolmaterial, toolcolor, tooldescription) values (%s, %s, %s, %s, %s) returning toolid;"
-        cursor.execute(query, (resourceid, toolmaterial, toolcolor, tooldescription,))
+        query = "insert into Tools(toolmaterial, toolcolor, tooldescription,resourceid) values (%s, %s, %s, %s) returning toolid;"
+        cursor.execute(query, (toolmaterial, toolcolor, tooldescription,resourceid,))
         toolid = cursor.fetchone()[0]
         self.conn.commit()
         return toolid

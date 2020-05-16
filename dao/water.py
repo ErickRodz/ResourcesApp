@@ -76,10 +76,10 @@ class WaterDAO:
             result.append(row)
         return result
 
-    def insert(self, resourceid, watersize, waterdescription):
+    def insert(self, watersize, waterdescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Water(resourceid, watersize, waterdescription) values (%s, %s, %s) returning waterid;"
-        cursor.execute(query, (resourceid, watersize, waterdescription,))
+        query = "insert into Water(watersize, waterdescription, resourceid) values (%s, %s, %s) returning waterid;"
+        cursor.execute(query, (watersize, waterdescription,resourceid,))
         waterid = cursor.fetchone()[0]
         self.conn.commit()
         return waterid

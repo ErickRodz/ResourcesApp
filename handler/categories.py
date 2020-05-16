@@ -5,18 +5,18 @@ from dao.categories import CategoriesDAO
 class CategoriesHandler:
     def build_category_dict(self, row):
         result = {}
-        result['categoryid'] = row[0]
-        result['supplierid'] = row[1]
-        result['resourceid'] = row[2]
-        result['caaegoryname'] = row[3]
+        result['CategoryID'] = row[0]
+        result['ResourceID'] = row[1]
+        result['CategoryName'] = row[2]
+        result['SupplierID'] = row[3]
         return result
 
-    def build_category_attributes(self, categoryid, supplierid, resourceid, categoryname):
+    def build_category_attributes(self, categoryid, resourceid, categoryname, supplierid):
         result = {}
-        result['categoryid'] = categoryid
+        result['CategoryID'] = categoryid
+        result['ResourceID'] = resourceid
+        result['CategoryName'] = categoryname
         result['supplierid'] = supplierid
-        result['resourceid'] = resourceid
-        result['caaegoryname'] = categoryname
         return result
 
     def getAllCategories(self):
@@ -74,14 +74,14 @@ class CategoriesHandler:
         return jsonify(Categories=result_list)
 
     def insertCategoriesJson(self, json):
-        resourceid = json['resourceid']
-        categoryname = json['categoryname']
-        supplierid = json['supplierid']
-        if  supplierid and categoryname and resourceid:
+        categoryname = json['CategoryName']
+        resourceid = json['ResourceID']
+        supplierid = json['SupplierID']
+        if categoryname and resourceid and supplierid:
             dao = CategoriesDAO()
-            categoryid = dao.insert(resourceid, supplierid, categoryname)
-            result = self.build_category_attributes(categoryid, supplierid, resourceid,
-                                                    categoryname)
+            categoryid = dao.insert(categoryname, resourceid, supplierid)
+            result = self.build_category_attributes(categoryid, resourceid,
+                                                    categoryname, supplierid)
             return jsonify(Category=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

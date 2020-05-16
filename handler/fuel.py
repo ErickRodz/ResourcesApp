@@ -5,11 +5,11 @@ from dao.fuel import FuelDAO
 class FuelHandler:
     def build_fuel_dict(self, row):
         result = {}
-        result['Fuelid'] = row[0]
-        result['Fueltype'] = row[1]
-        result['Fueloctenage'] = row[2]
-        result['Fueldescription'] = row[3]
-        result['resourceid'] = row[4]
+        result['FuelID'] = row[0]
+        result['FuelType'] = row[1]
+        result['FuelOctenage'] = row[2]
+        result['FuelDescription'] = row[3]
+        result['ResourceID'] = row[4]
         return result
 
     def build_fuel_attributes(self, Fuelid, Fueltype, Fueloctenage, Fueldescription,  resourceid,):
@@ -92,12 +92,12 @@ class FuelHandler:
     def insertFuelJson(self, json):
         Fueltype = json['FuelType']
         Fueloctenage = json['FuelOctenage']
-        Fueldescription = json['Fueldescription']
-        resourceid = json['resourceid']
+        Fueldescription = json['FuelDescription']
+        resourceid = json['ResourceID']
         if Fueltype and Fueloctenage and Fueldescription and resourceid:
             dao = FuelDAO()
-            Fuelid = dao.insert(Fueltype, Fueloctenage, Fueldescription, resourceid, )
-            result = self.build_fuel_attributes(Fuelid, Fueltype, Fueloctenage, Fueldescription, resourceid, )
+            Fuelid = dao.insert(Fueltype, Fueloctenage, Fueldescription, resourceid)
+            result = self.build_fuel_attributes(Fuelid, Fueltype, Fueloctenage, Fueldescription, resourceid)
             return jsonify(Fuel=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

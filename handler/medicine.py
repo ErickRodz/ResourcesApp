@@ -5,18 +5,18 @@ from dao.medicine import MedicineDAO
 class MedicineHandler:
     def build_medicine_dict(self, row):
         result = {}
-        result['medid'] = row[0]
-        result['meddose'] = row[1]
-        result['meddescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['MedID'] = row[0]
+        result['MedDose'] = row[1]
+        result['MedDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
 
     def build_medicine_attributes(self, medid, meddose, meddescription, resourceid):
         result = {}
-        result['medid'] = medid
-        result['meddose'] = meddose
-        result['meddescription'] = meddescription
-        result['resourceid'] = resourceid
+        result['MedID'] = medid
+        result['MedDose'] = meddose
+        result['MedDescription'] = meddescription
+        result['ResourceID'] = resourceid
         return result
 
     def getAllMedicine(self):
@@ -85,6 +85,18 @@ class MedicineHandler:
             return jsonify(Medicine=result)
         else:
             return jsonify(Error="Unepected attributes in post request"), 404
+
+    def insertMedicineJson(self, json):
+        meddose = json['MedDose']
+        meddescription = json['MedDescription']
+        resourceid = json['ResourceID']
+        if resourceid and meddose and meddescription:
+            dao = MedicineDAO()
+            medid = dao.insert(meddose, meddescription, resourceid)
+            result = self.build_medicine_attributes(medid, meddose, meddescription, resourceid)
+            return jsonify(Medication=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request"), 400
     
     def deleteMedicine(self, medid):
         dao = MedicineDAO()

@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class GeneratorsDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -66,9 +66,9 @@ class GeneratorsDAO:
             result.append(row)
         return result
 
-    def insert(self, resourceid, generatorbrand, generatortype, generatordescription):
+    def insert(self, generatorbrand, generatortype, generatordescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Generators(generatorbrand, generatortype, geneatordescription, resourceid) values (%s, %s, %s, %s) returning generatorid;"
+        query = "insert into Generators(generatorbrand, generatortype, generatordescription, resourceid) values (%s, %s, %s, %s) returning generatorid;"
         cursor.execute(query, (generatorbrand, generatortype, generatordescription, resourceid, ))
         generatorid = cursor.fetchone()[0]
         self.conn.commit()

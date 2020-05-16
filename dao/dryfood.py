@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class DryFoodDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -48,9 +48,9 @@ class DryFoodDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, resourceid, dfoodserving, dfooddescription):
+    def insert(self, dfoodserving, dfooddescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into DryFood(dfoodserving, dfooddescription, resourceid,) values (%s, %s, %s) returning dfoodid;"
+        query = "insert into DryFood(dfoodserving, dfooddescription, resourceid) values (%s, %s, %s) returning dfoodid;"
         cursor.execute(query, (dfoodserving, dfooddescription,resourceid,))
         dfoodid = cursor.fetchone()[0]
         self.conn.commit()

@@ -5,28 +5,28 @@ from dao.orders import OrdersDAO
 class OrdersHandler:
     def build_orders_dict(self, row):
         result = {}
-        result['orderid'] = row[0]
-        result['totalprice'] = row[1]
-        result['totalquantity'] = row[2]
-        result['userid'] = row[3]
-        result['cardid'] = row[4]
-        result['cartid'] = row[5]
-        result['resourceid'] = row[6]
-        result['resourcename'] = row[7]
-        result['ordertype'] = row[8]
+        result['OrderID'] = row[0]
+        result['TotalPrice'] = row[1]
+        result['TotalQuantity'] = row[2]
+        result['UserID'] = row[3]
+        result['CardID'] = row[4]
+        result['CartID'] = row[5]
+        result['ResourceID'] = row[6]
+        result['ResourceName'] = row[7]
+        result['OrderType'] = row[8]
         return result
 
     def build_orders_attributes(self, orderid, totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename, ordertype):
         result = {}
-        result['orderid'] = orderid
-        result['totalprice'] = totalprice
-        result['totalquantity'] = totalquantity
-        result['userid'] = userid
-        result['cardid'] = cardid
-        result['cartid'] = cartid
-        result['resourceid'] = resourceid
-        result['resourcename'] = resourcename
-        result['ordertype'] = ordertype
+        result['OrderID'] = orderid
+        result['TotalPrice'] = totalprice
+        result['TotalQuantity'] = totalquantity
+        result['UserID'] = userid
+        result['CardID'] = cardid
+        result['CartID'] = cartid
+        result['ResourceID'] = resourceid
+        result['ResourceName'] = resourcename
+        result['OrderType'] = ordertype
         return result
 
     def getAllOrders(self):
@@ -181,20 +181,18 @@ class OrdersHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertOrderJson(self, json):
-        totalprice = json['totalprice']
-        totalquantity = json['totalquantity']
-        userid = json['userid']
-        cardid = json['cardid']
-        cartid = json['cartid']
-        resourceid = json['resourceid']
-        resourcename = json['resourcename']
-        ordertype = json['ordertype']
+        totalprice = json['TotalPrice']
+        totalquantity = json['TotalQuantity']
+        userid = json['UserID']
+        cardid = json['CardID']
+        cartid = json['CartID']
+        resourceid = json['ResourceID']
+        resourcename = json['ResourceName']
+        ordertype = json['OrderType']
         if resourceid and userid and cardid and cartid and totalquantity and ordertype and totalprice:
             dao = OrdersDAO()
             resourcequantity = dao.getResourceQuantityByResourceId(resourceid)
-            if totalquantity > resourcequantity:
-                return jsonify(Error="Inserted quantity exceeds the resources current stock")
-            elif ordertype == 'Request':
+            if ordertype == 'Request':
                 totalquantity = 0
                 totalprice = 0
                 orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename,
@@ -208,18 +206,17 @@ class OrdersHandler:
                                      ordertype)
                 result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
                                                       resourceid, resourcename, ordertype)
-                newquantity = resourcequantity - totalquantity
-                dao.updateResourceQuantity(newquantity, resourceid)
+                #newquantity = totalquantity - totalquantity
+                #dao.updateResourceQuantity(newquantity, resourceid)
                 return jsonify(Order=result), 201
             else:
                 resourceprice = dao.getResourcePriceByResourceId(resourceid)
-                totalprice = totalquantity * resourceprice
                 orderid = dao.insert(totalprice, totalquantity, userid, cardid, cartid, resourceid, resourcename,
                                      ordertype)
                 result = self.build_orders_attributes(orderid, totalprice, totalquantity, userid, cardid, cartid,
                                                       resourceid, resourcename, ordertype)
-                newquantity = resourcequantity - totalquantity
-                dao.updateResourceQuantity(newquantity, resourceid)
+                #newquantity = resourcequantity - totalquantity
+                #dao.updateResourceQuantity(newquantity, resourceid)
                 return jsonify(Order=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

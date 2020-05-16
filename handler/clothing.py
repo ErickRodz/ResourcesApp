@@ -5,12 +5,12 @@ from dao.clothing import ClothingDAO
 class ClothingHandler:
     def build_clothing_dict(self, row):
         result = {}
-        result['Clothingid'] = row[0]
-        result['Clothingbrand'] = row[1]
+        result['ClothingID'] = row[0]
+        result['ClothingBrand'] = row[1]
         result['ClothingSize'] = row[2]
         result['ClothingFabric'] = row[3]
-        result['Clothingdescription'] = row[4]
-        result['resourceid'] = row[5]
+        result['ClothingDescription'] = row[4]
+        result['ResourceID'] = row[5]
         return result
 
     def build_clothing_attributes(self, Clothingid, Clothingbrand, Clothingsize, Clothingfabric, Clothingdescription, resourceid,):
@@ -95,14 +95,14 @@ class ClothingHandler:
     def insertClothingJson(self, json):
         Clothingbrand = json['ClothingBrand']
         Clothingsize = json['ClothingSize']
-        Clothingfabric = json["ClothingFabric"]
+        Clothingfabric = json['ClothingFabric']
         Clothingdescription = json['ClothingDescription']
-        resourceid = json['resourceid']
+        resourceid = json['ResourceID']
         if Clothingbrand and Clothingsize and Clothingfabric and Clothingdescription and resourceid:
             dao = ClothingDAO()
-            Clothingid = dao.insert(Clothingbrand, Clothingsize, Clothingfabric, Clothingdescription, resourceid, )
+            Clothingid = dao.insert(Clothingbrand, Clothingsize, Clothingfabric, Clothingdescription, resourceid)
             result = self.build_clothing_attributes(Clothingid, Clothingbrand, Clothingsize, Clothingfabric,
-                                                    Clothingdescription, resourceid, )
+                                                    Clothingdescription, resourceid)
             return jsonify(Clothing=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

@@ -58,7 +58,7 @@ class IceDAO:
 
     def insert(self, icesize, icedescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Ice(resourceid, icesize, icedescription) values(%s, %s, %s) returning iceid;"
+        query = "insert into Ice(icesize, icedescription, resourceid) values(%s, %s, %s) returning iceid;"
         cursor.execute(query, (icesize, icedescription,resourceid, ))
         iceid = cursor.fetchone()[0]
         self.conn.commit()

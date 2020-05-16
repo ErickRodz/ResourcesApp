@@ -77,7 +77,7 @@ class SuppliersDAO:
 
     def insert(self, UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName):
         cursor = self.conn.cursor()
-        query = "insert into Suppliers(username, password, email, slocation, firstname, lastname, dateofbirth, gender, categoryname) values (%s, %s, %s, %s, %s %s, %s, %s, %s) returning supplierid;"
+        query = "insert into Suppliers(username, password, email, slocation, firstname, lastname, dateofbirth, gender, categoryname) values (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning supplierid;"
         cursor.execute(query, (UserName, Password, Email, SLocation, FirstName, LastName, DateofBirth, Gender, CategoryName,))
         supplierid = cursor.fetchone()[0]
         self.conn.commit()

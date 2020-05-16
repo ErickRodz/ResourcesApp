@@ -5,18 +5,18 @@ from dao.water import WaterDAO
 class WaterHandler:
     def build_water_dict(self, row):
         result = {}
-        result['waterid'] = row[0]
-        result['watersize'] = row[1]
-        result['waterdescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['WaterID'] = row[0]
+        result['WaterSize'] = row[1]
+        result['WaterDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
 
     def build_water_attributes(self, waterid, watersize, waterdescription, resourceid):
         result = {}
-        result['waterid'] = waterid
-        result['watersize'] = watersize
-        result['waterdescription'] = waterdescription
-        result['resourceid'] = resourceid
+        result['WaterID'] = waterid
+        result['WaterSize'] = watersize
+        result['WaterDescription'] = waterdescription
+        result['ResourceID'] = resourceid
         return result
 
     def getAllWater(self):
@@ -86,6 +86,18 @@ class WaterHandler:
             waterid = dao.insert(resourceid, watersize, waterdescription)
             result = self.build_water_attributes(waterid, resourceid, watersize, waterdescription)
             return jsonify(Water=result)
+        else:
+            return jsonify(Error="Unexpected attributes in post request")
+
+    def insertWaterJson(self, json):
+        watersize = json['WaterSize']
+        waterdescription = json['WaterDescription']
+        resourceid = json['ResourceID']
+        if resourceid and watersize and waterdescription:
+            dao = WaterDAO()
+            waterid = dao.insert(watersize, waterdescription, resourceid)
+            result = self.build_water_attributes(waterid, watersize, waterdescription, resourceid)
+            return jsonify(water=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")
 

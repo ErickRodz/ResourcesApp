@@ -5,7 +5,7 @@ from dao.suppliers import SuppliersDAO
 class SuppliersHandler:
     def build_suppliers_dict(self, row):
         result = {}
-        result['SuppliersID'] = row[0]
+        result['SupplierID'] = row[0]
         result['UserName'] = row[1]
         result['Password'] = row[2]
         result['Email'] = row[3]
@@ -112,7 +112,7 @@ class SuppliersHandler:
         dateofbirth = json['DateofBirth']
         gender = json['Gender']
         categoryname = json['CategoryName']
-        if  username and password and email and slocation and firstname and lastname and dateofbirth and gender and categoryname:
+        if username and password and email and slocation and firstname and lastname and dateofbirth and gender and categoryname:
             dao = SuppliersDAO()
             supplierid = dao.insert(username, password, email, slocation, firstname, lastname, dateofbirth,gender, categoryname)
             result = self.build_suppliers_attributes(supplierid, username, password, email, slocation, firstname, lastname, dateofbirth,gender,categoryname)

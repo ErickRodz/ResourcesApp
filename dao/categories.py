@@ -48,15 +48,15 @@ class CategoriesDAO:
         #return result
 
 
-    def insert(self, resourceid, supplierid, categoryname):
+    def insert(self, resourceid, categoryname, supplierid):
         cursor = self.conn.cursor()
-        query = "insert into Categories(resourceid, supplierid, categoryname) values(%s, %s, %s) returning categoryid;"
-        cursor.execute(query, (resourceid, supplierid, categoryname,))
+        query = "insert into Categories(categoryname,resourceid, supplierid) values(%s, %s, %s) returning categoryid;"
+        cursor.execute(query, (resourceid, categoryname, supplierid,))
         categoryid = cursor.fetchone()[0]
         self.conn.commit()
         return categoryid
 
-    def update(self, categoryid, resourceid, supplierid, categoryname):
+    def update(self, categoryid, resourceid, categoryname, supplierid,):
         cursor = self.conn.cursor()
         query = 'update Categories set categoryname = %s where categoryid = %s and resourceid = %s and supplierid = %s;'
         cursor.execute(query, (categoryname, categoryid, resourceid, supplierid,))

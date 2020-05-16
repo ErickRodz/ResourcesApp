@@ -5,18 +5,18 @@ from dao.babyfood import BabyFoodDAO
 class BabyFoodHandler:
     def build_babyfood_dict(self, row):
         result = {}
-        result['bfoodid'] = row[0]
-        result['bfoodflavor'] = row[1]
-        result['bfooddescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['BFoodID'] = row[0]
+        result['BFoodFlavor'] = row[1]
+        result['BFoodDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
 
     def build_babyfood_attributes(self, bfoodid, bfoodflavor, bfooddescription, resourceid,):
         result = {}
-        result['bfoodid'] = bfoodid
-        result['bfoodflavor'] = bfoodflavor
-        result['bfooddescription'] = bfooddescription
-        result['resourceid'] = resourceid
+        result['BFoodID'] = bfoodid
+        result['BFoodFlavor'] = bfoodflavor
+        result['BFoodDescription'] = bfooddescription
+        result['ResourceID'] = resourceid
         return result
 
     def getAllBabyFood(self):
@@ -86,7 +86,7 @@ class BabyFoodHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertbfoodJson(self, json):
-        bfoodflavor = json['BfoodFlavor']
+        bfoodflavor = json['BFoodFlavor']
         bfooddescription = json['BFoodDescription']
         resourceid = json['ResourceID']
         if bfoodflavor and bfooddescription and resourceid:

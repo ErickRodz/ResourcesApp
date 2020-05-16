@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class HeavyEquipmentDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -48,10 +48,10 @@ class HeavyEquipmentDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, resourceid, heavyeqbrand, heavyeqdescription):
+    def insert(self, heavyeqbrand, heavyeqdescription, resourceid ):
         cursor = self.conn.cursor()
-        query = "insert into HeavyEquipment(resourceid, heavyeqbrand, heavyeqdescription) values (%s, %s, %s) returning heavyeqid;"
-        cursor.execute(query, (resourceid, heavyeqbrand, heavyeqdescription,))
+        query = "insert into HeavyEquipment(heavyeqbrand, heavyeqdescription, resourceid) values (%s, %s, %s) returning heavyeqid;"
+        cursor.execute(query, (heavyeqbrand, heavyeqdescription, resourceid, ))
         heavyeqid = cursor.fetchone()[0]
         self.conn.commit()
         return heavyeqid

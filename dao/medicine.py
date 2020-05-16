@@ -84,10 +84,10 @@ class MedicineDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, resourceid, medname, meddose, meddescription):
+    def insert(self, meddose, meddescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into Medicine(resourceid, medname, meddose, meddescription) values(%s, %s, %s, %s) returning medid;"
-        cursor.execute(query, (resourceid, medname, meddose, meddescription,))
+        query = "insert into Medication(meddose, meddescription, resourceid) values(%s, %s, %s) returning medid;"
+        cursor.execute(query, (meddose, meddescription,resourceid, ))
         medid = cursor.fetchone()[0]
         self.conn.commit()
         return medid

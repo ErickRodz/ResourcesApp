@@ -5,18 +5,18 @@ from dao.medicalequipment import MedicalEquipmentDAO
 class MedicalEquipmentHandler:
     def build_medicalequipment_dict(self, row):
         result = {}
-        result['medeqid'] = row[0]
-        result['medeqbrand'] = row[1]
-        result['medeqdescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['MedEqID'] = row[0]
+        result['MedEqBrand'] = row[1]
+        result['MedEqDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
     
     def build_medicalequipment_attributes(self, medeqid, medeqbrand, medeqdescription, resourceid):
         result = {}
-        result['medeqid'] = medeqid
-        result['medeqbrand'] = medeqbrand
-        result['medeqdescription'] = medeqdescription
-        result['resourceid'] = resourceid
+        result['MedEqID'] = medeqid
+        result['MedEqBrand'] = medeqbrand
+        result['MedEqDescription'] = medeqdescription
+        result['ResourceID'] = resourceid
         return result
     
     def getAllMedicalEquipment(self):
@@ -87,6 +87,18 @@ class MedicalEquipmentHandler:
             return jsonify(MedEq=result)
         else:
             return jsonify(Error="Unexpected attributes in post request"), 404
+
+    def insertMedicalEquipmentJson(self, json):
+        medeqbrand = json['MedEqBrand']
+        medeqdescription = json['MedEqDescription']
+        resourceid = json['ResourceID']
+        if resourceid and medeqbrand and medeqdescription:
+            dao = MedicalEquipmentDAO()
+            medeqid = dao.insert(medeqbrand, medeqdescription, resourceid)
+            result = self.build_medicalequipment_attributes(medeqid, medeqbrand, medeqdescription, resourceid)
+            return jsonify(Medication=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request"), 400
     
     def deleteMedicalEquipment(self, medeqid):
         dao = MedicalEquipmentDAO()

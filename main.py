@@ -37,7 +37,7 @@ def greeting():
     return 'Hello, welcome to our Sales App!'
 
 
-# 1 y 2
+# 1
 @app.route('/ProyectoDB/users', methods=['GET', 'POST'])
 def getAllUsers():
     if request.method == 'POST':
@@ -87,6 +87,7 @@ def getSupplierById(supplierid):
         return jsonify(Error="Method not allowed"), 405
 
 
+# 2
 @app.route('/ProyectoDB/administrator', methods=['GET', 'POST'])
 def getAllAdministrators():
     if request.method == 'POST':
@@ -193,6 +194,7 @@ def getAllBanks():
             return BankHandler().searchBanks(request.args)
 
 
+# Phase 1, 2, and Phase 3. Payment Method Post
 @app.route('/ProyectoDB/payment', methods=['GET', 'POST'])
 def getAllPaymentMethods():
     if request.method == 'POST':
@@ -298,6 +300,184 @@ def getAllResourceDetails(resourceid):
     def getResorceAvailableByName(resourcename):
         if request.method == 'GET':
             return ResourceHandler().getResourceAvailabilityByName(resourcename)
+
+    # Phase 3 Stuff
+@app.route('/ProyectoDB/category', methods=['GET', 'POST'])
+def getAllCategories():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return CategoriesHandler().insertCategoriesJson(request.json)
+    else:
+        if not request.args:
+            return CategoriesHandler().getAllCategories()
+        else:
+            return CategoriesHandler().searchCategories(request.args)
+
+@app.route('/ProyectoDB/cannedfood', methods=['GET', 'POST'])
+def getAllCFood():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return CannedFoodHandler().insertCFoodJson(request.json)
+    else:
+        if not request.args:
+            return CannedFoodHandler().getAllCannedFood()
+        else:
+            return CannedFoodHandler().searchCannedFood(request.args)
+
+@app.route('/ProyectoDB/babyfood', methods=['GET', 'POST'])
+def getAllBFood():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return BabyFoodHandler().insertbfoodJson(request.json)
+    else:
+        if not request.args:
+            return BabyFoodHandler().getAllBabyFood()
+        else:
+            return BabyFoodHandler().searchBabyFood(request.args)
+
+@app.route('/ProyectoDB/dryfood', methods=['GET', 'POST'])
+def getAllDFood():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return DryFoodHandler().insertDFoodJson(request.json)
+    else:
+        if not request.args:
+            return DryFoodHandler().getAllDryFood()
+        else:
+            return DryFoodHandler().searchDryFood(request.args)
+
+@app.route('/ProyectoDB/water', methods=['GET', 'POST'])
+def getAllWater():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return WaterHandler().insertWaterJson(request.json)
+    else:
+        if not request.args:
+            return WaterHandler().getAllWater()
+        else:
+            return WaterHandler().searchWater(request.args)
+
+@app.route('/ProyectoDB/batteries', methods=['GET', 'POST'])
+def getAllBatteries():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return BatteriesHandler().insertBatteryJson(request.json)
+    else:
+        if not request.args:
+            return BatteriesHandler().getAllBatteries()
+        else:
+            return BatteriesHandler().searchBatteries(request.args)
+
+@app.route('/ProyectoDB/ice', methods=['GET', 'POST'])
+def getAllIce():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return IceHandler().insertIceJson(request.json)
+    else:
+        if not request.args:
+            return IceHandler().getAllIce()
+        else:
+            return IceHandler().searchIce(request.args)
+
+@app.route('/ProyectoDB/parts', methods=['GET', 'POST'])
+def getAllParts():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return PartsHandler().insertPartsJson(request.json)
+    else:
+        if not request.args:
+            return PartsHandler().getAllParts()
+        else:
+            return PartsHandler().searchParts(request.args)
+
+@app.route('/ProyectoDB/tools', methods=['GET', 'POST'])
+def getAllTools():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return ToolsHandler().insertToolJson(request.json)
+    else:
+        if not request.args:
+            return ToolsHandler().getAllTools()
+        else:
+            return ToolsHandler().searchTools(request.args)
+
+@app.route('/ProyectoDB/clothing', methods=['GET', 'POST'])
+def getAllClothing():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return ClothingHandler().insertClothingJson(request.json)
+    else:
+        if not request.args:
+            return ClothingHandler().getAllClothing()
+        else:
+            return ClothingHandler().searchClothing(request.args)
+
+@app.route('/ProyectoDB/fuel', methods=['GET', 'POST'])
+def getAllFuel():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return FuelHandler().insertFuelJson(request.json)
+    else:
+        if not request.args:
+            return FuelHandler().getAllFuel()
+        else:
+            return FuelHandler().searchFuel(request.args)
+
+@app.route('/ProyectoDB/medication', methods=['GET', 'POST'])
+def getAllMedicine():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return MedicineHandler().insertMedicineJson(request.json)
+    else:
+        if not request.args:
+            return MedicineHandler().getAllMedicine()
+        else:
+            return MedicineHandler().searchMedicine(request.args)
+
+@app.route('/ProyectoDB/medequip', methods=['GET', 'POST'])
+def getAllMedEquipment():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return MedicalEquipmentHandler().insertMedicalEquipmentJson(request.json)
+    else:
+        if not request.args:
+            return MedicalEquipmentHandler().getAllMedicalEquipment()
+        else:
+            return MedicalEquipmentHandler().searchMedicalEquipment(request.args)
+
+@app.route('/ProyectoDB/heavyequip', methods=['GET', 'POST'])
+def getAllHeavyEquipment():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return HeavyEquipmentHandler().insertHeavyEquipmentJson(request.json)
+    else:
+        if not request.args:
+            return HeavyEquipmentHandler().getAllHeavyEquipment()
+        else:
+            return HeavyEquipmentHandler().searchHeavyEquipment(request.args)
+
+@app.route('/ProyectoDB/generators', methods=['GET', 'POST'])
+def getAllGenerators():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return GeneratorsHandler().insertGeneratorJson(request.json)
+    else:
+        if not request.args:
+            return GeneratorsHandler().getAllGenerators()
+        else:
+            return GeneratorsHandler().searcGenerators(request.args)
+
+
+@app.route('/ProyectoDB/orders', methods=['GET', 'POST'])
+def getAllOrders():
+    if request.method == 'POST':
+        print("REQUEST: ", request.json)
+        return OrdersHandler().insertOrderJson(request.json)
+    else:
+        if not request.args:
+            return OrdersHandler().getAllOrders()
+        else:
+            return OrdersHandler().searchOrders(request.args)
 
 
 if __name__ == "__main__":

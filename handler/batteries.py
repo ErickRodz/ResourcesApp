@@ -5,20 +5,20 @@ from dao.batteries import BatteriesDAO
 class BatteriesHandler:
     def build_batteries_dict(self, row):
         result = {}
-        result['batteryid'] = row[0]
-        result['batterybrand'] = row[1]
-        result['batterytype'] = row[2]
-        result['batterydescription'] = row[3]
-        result['resourceid'] = row[4]
+        result['BatteryID'] = row[0]
+        result['BatteryBrand'] = row[1]
+        result['BatteryType'] = row[2]
+        result['BatteryDescription'] = row[3]
+        result['ResourceID'] = row[4]
         return result
 
     def build_batteries_attributes(self, batteryid, batterybrand, batterytype, batterydescription, resourceid,):
         result = {}
-        result['batteryid'] = batteryid
-        result['batterybrand'] = batterybrand
-        result['batterytype'] = batterytype
-        result['batterydescription'] = batterydescription
-        result['resourceid'] = resourceid
+        result['BatteryID'] = batteryid
+        result['BatteryBrand'] = batterybrand
+        result['BatteryType'] = batterytype
+        result['BatteryDescription'] = batterydescription
+        result['ResourceID'] = resourceid
         return result
 
     def getAllBatteries(self):
@@ -89,14 +89,14 @@ class BatteriesHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertBatteryJson(self, json):
-        batterybrand = json['batterybrand']
-        batterytype = json['batterytype']
-        batterydescription = json['batterydescription']
-        resourceid = json['resourceid']
+        batterybrand = json['BatteryBrand']
+        batterytype = json['BatteryType']
+        batterydescription = json['BatteryDescription']
+        resourceid = json['ResourceID']
         if batterybrand and batterytype and batterydescription and resourceid:
             dao = BatteriesDAO()
-            batteryid = dao.insert(batterybrand, batterytype, batterydescription, resourceid, )
-            result = self.build_batteries_attributes(batteryid, batterybrand, batterytype, batterydescription, resourceid, )
+            batteryid = dao.insert(batterybrand, batterytype, batterydescription, resourceid)
+            result = self.build_batteries_attributes(batteryid, batterybrand, batterytype, batterydescription, resourceid)
             return jsonify(Battery=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

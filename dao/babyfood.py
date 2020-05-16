@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class BabyFoodDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -59,7 +59,7 @@ class BabyFoodDAO:
 
     def insert(self, bfoodflavor, bfooddescription, resourceid):
         cursor = self.conn.cursor()
-        query = "insert into BabyFood(bfoodflavor, bfooddescription, resourceid, ) values (%s, %s, %s) returning babyfoodid;"
+        query = "insert into BabyFood(bfoodflavor, bfooddescription, resourceid) values (%s, %s, %s) returning bfoodid;"
         cursor.execute(query, (bfoodflavor, bfooddescription, resourceid, ))
         bfoodid = cursor.fetchone()[0]
         self.conn.commit()

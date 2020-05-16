@@ -4,7 +4,7 @@ from config.dbconfig import pg_config
 
 
 class CannedFoodDAO:
-    def _init_(self):
+    def __init__(self):
         connection_url = "dbname=%s user=%s password=%s"%(pg_config['dbname'],pg_config['user'],pg_config['passwd'])
 
         self.conn = psycopg2.connect(connection_url)
@@ -55,10 +55,10 @@ class CannedFoodDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, cfoodbrand, cfoodserving, cfooddescription, resourceid, ):
+    def insert(self, cfoodserving, cfooddescription, resourceid, ):
         cursor = self.conn.cursor()
-        query = "insert into CannedFood(cfoodbrand, cfoodserving, cfooddescription, resourceid) values (%s, %s, %s, %s) returning cfoodid;"
-        cursor.execute(query, (cfoodbrand, cfoodserving, cfooddescription, resourceid,))
+        query = "insert into CannedFood(cfoodserving, cfooddescription, resourceid) values (%s, %s, %s) returning cfoodid;"
+        cursor.execute(query, (cfoodserving, cfooddescription, resourceid,))
         cfoodid = cursor.fetchone()[0]
         self.conn.commit()
         return cfoodid
@@ -70,10 +70,10 @@ class CannedFoodDAO:
         self.conn.commit()
         return cfoodid
 
-    def update(self, cfoodid, cfoodbrand, cfoodserving, cfooddescription):
+    def update(self, cfoodid, cfoodserving, cfooddescription):
         cursor = self.conn.cursor()
-        query = "update CannedFood set cfoodbrand = %s, cfoodserving = %s, cfooddescription = %s where cfoodid = %s;"
-        cursor.execute(query, (cfoodbrand, cfoodserving, cfooddescription, cfoodid,))
+        query = "update CannedFood set cfoodserving = %s, cfooddescription = %s where cfoodid = %s;"
+        cursor.execute(query, (cfoodserving, cfooddescription, cfoodid,))
         self.conn.commit()
         return cfoodid
 

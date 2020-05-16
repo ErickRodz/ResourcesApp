@@ -5,18 +5,18 @@ from dao.ice import IceDAO
 class IceHandler:
     def build_ice_dict(self, row):
         result = {}
-        result['iceid'] = row[0]
-        result['icesize'] = row[1]
-        result['icedescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['IceID'] = row[0]
+        result['IceSize'] = row[1]
+        result['IceDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
     
     def build_ice_attributes(self, iceid, icesize, icedescription, resourceid):
         result = {}
-        result['iceid'] = iceid
-        result['icesize'] = icesize
-        result['icedescription'] = icedescription
-        result['resourceid'] = resourceid
+        result['IceID'] = iceid
+        result['Iceize'] = icesize
+        result['IceDescription'] = icedescription
+        result['ResourceID'] = resourceid
         return result
     
     def getAllIce(self):
@@ -87,6 +87,18 @@ class IceHandler:
                 return jsonify(Ice=result)
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 404
+
+    def insertIceJson(self, json):
+        icesize = json['IceSize']
+        icedescription = json['IceDescription']
+        resourceid = json['ResourceID']
+        if resourceid and icesize and icedescription:
+            dao = IceDAO()
+            iceid = dao.insert(icesize, icedescription, resourceid)
+            result = self.build_ice_attributes(iceid, icesize, icedescription, resourceid)
+            return jsonify(Ice=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request")
     
     def deleteIce(self, iceid):
         dao = IceDAO()

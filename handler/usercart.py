@@ -84,7 +84,7 @@ class UserCartHandler:
             if userid and resourceid and selection:
                 dao = UserCartDAO()
                 cartid = dao.insert(userid, resourceid, selection)
-                result = self.build_usercart_attributes(userid, resourceid, selection)
+                result = self.build_usercart_attributes(cartid, userid, resourceid, selection)
                 return jsonify(Carts=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -96,7 +96,7 @@ class UserCartHandler:
         if userid and resourceid and selection:
             dao = UserCartDAO()
             cartid = dao.insert(userid, resourceid, selection)
-            result = self.build_usercart_attributes(userid, resourceid, selection)
+            result = self.build_usercart_attributes(cartid, userid, resourceid, selection)
             return jsonify(Carts=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400

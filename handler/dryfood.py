@@ -91,8 +91,8 @@ class DryFoodHandler:
         resourceid = json['ResourceID']
         if dfoodserving and dfooddescription and resourceid:
             dao = DryFoodDAO()
-            dfoodid = dao.insert(dfoodserving, dfooddescription, resourceid, )
-            result = self.build_dryfood_attributes(dfoodid, dfoodserving, dfooddescription, resourceid, )
+            dfoodid = dao.insert(dfoodserving, dfooddescription, resourceid)
+            result = self.build_dryfood_attributes(dfoodid, dfoodserving, dfooddescription, resourceid)
             return jsonify(dfood=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

@@ -95,6 +95,19 @@ class ToolsHandler:
         else:
             return jsonify(Error="Unexpected attributes in post request"), 400
 
+    def insertToolJson(self, json):
+        toolmaterial = json['ToolMaterial']
+        toolcolor = json['ToolColor']
+        tooldescription = json['ToolDescription']
+        resourceid = json['ResourceID']
+        if resourceid and toolmaterial and toolcolor and tooldescription:
+            dao = ToolsDAO()
+            Toolsid = dao.insert(toolmaterial, toolcolor, tooldescription, resourceid)
+            result = self.build_tools_attributes(Toolsid, toolmaterial, toolcolor, tooldescription, resourceid)
+            return jsonify(Tools=result), 201
+        else:
+            return jsonify(Error="Unexpected attributes in post request")
+
     def deleteTool(self, toolid):
         dao = ToolsDAO()
         if not dao.getToolsById(toolid):

@@ -5,18 +5,18 @@ from dao.cannedfood import CannedFoodDAO
 class CannedFoodHandler:
     def build_cannedfood_dict(self, row):
         result = {}
-        result['cfoodid'] = row[0]
-        result['cfoodserving'] = row[1]
-        result['cfooddescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['CFoodID'] = row[0]
+        result['CFoodServing'] = row[1]
+        result['CFoodDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
 
     def build_cannedfood_attributes(self, cfoodid, cfoodserving, cfooddescription, resourceid,):
         result = {}
-        result['cfoodid'] = cfoodid
-        result['cfoodserving'] = cfoodserving
-        result['cfooddescription'] = cfooddescription
-        result['resourceid'] = resourceid
+        result['CFoodID'] = cfoodid
+        result['CFoodServing'] = cfoodserving
+        result['CFoodDescription'] = cfooddescription
+        result['ResourceID'] = resourceid
         return result
 
     def getAllCannedFood(self):
@@ -85,14 +85,14 @@ class CannedFoodHandler:
         else:
             return jsonify(Error="Unexpected attributes in post request")
 
-    def insertcfoodJson(self, json):
+    def insertCFoodJson(self, json):
         cfoodserving = json['CFoodServing']
         cfooddescription = json['CFoodDescription']
         resourceid = json['ResourceID']
         if cfoodserving and cfooddescription and resourceid:
             dao = CannedFoodDAO()
-            cfoodid = dao.insert( cfoodserving, cfooddescription, resourceid, )
-            result = self.build_cannedfood_attributes(cfoodid, cfoodserving, cfooddescription, resourceid, )
+            cfoodid = dao.insert(cfoodserving, cfooddescription, resourceid)
+            result = self.build_cannedfood_attributes(cfoodid, cfoodserving, cfooddescription, resourceid)
             return jsonify(cfood=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

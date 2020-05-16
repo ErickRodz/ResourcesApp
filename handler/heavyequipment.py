@@ -5,17 +5,17 @@ from dao.heavyequipment import HeavyEquipmentDAO
 class HeavyEquipmentHandler:
     def build_heavyequipment_dict(self, row):
         result = {}
-        result['HeavyEquipmentid'] = row[0]
-        result['HeavyEquipmentbrand'] = row[1]
-        result['HeavyEquipmentdescription'] = row[2]
-        result['resourceid'] = row[3]
+        result['HeavyEqID'] = row[0]
+        result['HeavyEqBrand'] = row[1]
+        result['HeavyEqDescription'] = row[2]
+        result['ResourceID'] = row[3]
         return result
 
     def build_heavyequipment_attributes(self, HeavyEquipmentid, HeavyEquipmentbrand, HeavyEquipmentdescription, resourceid):
         result = {}
-        result['HeavyEquipmentID'] = HeavyEquipmentid
-        result['HeavyEquipmentBrand'] = HeavyEquipmentbrand
-        result['HeavyEquipmentDescription'] = HeavyEquipmentdescription
+        result['HeavyEqID'] = HeavyEquipmentid
+        result['HeavyEqBrand'] = HeavyEquipmentbrand
+        result['HeavyEqDescription'] = HeavyEquipmentdescription
         result['ResourceID'] = resourceid
         return result
 
@@ -86,13 +86,13 @@ class HeavyEquipmentHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertHeavyEquipmentJson(self, json):
-        HeavyEquipmentbrand = json['HeavyEquipmentBrand']
-        HeavyEquipmentdescription = json['HeavyEquipmentDescription']
+        HeavyEquipmentbrand = json['HeavyEqBrand']
+        HeavyEquipmentdescription = json['HeavyEqDescription']
         resourceid = json['ResourceID']
         if HeavyEquipmentbrand and HeavyEquipmentdescription and resourceid:
             dao = HeavyEquipmentDAO()
-            HeavyEquipmentid = dao.insert(HeavyEquipmentbrand, HeavyEquipmentdescription, resourceid, )
-            result = self.build_heavyequipment_attributes(HeavyEquipmentid, HeavyEquipmentbrand, HeavyEquipmentdescription, resourceid, )
+            HeavyEquipmentid = dao.insert(HeavyEquipmentbrand, HeavyEquipmentdescription, resourceid)
+            result = self.build_heavyequipment_attributes(HeavyEquipmentid, HeavyEquipmentbrand, HeavyEquipmentdescription, resourceid)
             return jsonify(HeavyEquipment=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

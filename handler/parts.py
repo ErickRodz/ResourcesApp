@@ -94,8 +94,8 @@ class PartsHandler:
         resourceid = json['ResourceID']
         if Partsmaterial and Partscolor and Partsdescription and resourceid:
             dao = PartsDAO()
-            Partsid = dao.insert(Partsmaterial, Partscolor, Partsdescription, resourceid, )
-            result = self.build_parts_attributes(Partsmaterial, Partscolor, Partsdescription, resourceid, )
+            Partsid = dao.insert(Partsmaterial, Partscolor, Partsdescription, resourceid)
+            result = self.build_parts_attributes(Partsid, Partsmaterial, Partscolor, Partsdescription, resourceid)
             return jsonify(Parts=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")

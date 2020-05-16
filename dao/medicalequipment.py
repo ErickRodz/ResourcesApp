@@ -74,10 +74,10 @@ class MedicalEquipmentDAO:
         result = cursor.fetchone()
         return result
     
-    def insert(self, resourceid, medeqbrand, medeqdescription):
+    def insert(self, medeqbrand, medeqdescription,resourceid):
         cursor = self.conn.cursor()
-        query = "insert into MedicalEquipment(resourceid, medbrand, medeqdescription) values (%s, %s, %s) returning medeqid;"
-        cursor.execute(query, (resourceid, medeqbrand, medeqdescription,))
+        query = "insert into MedicalEquipment(medeqbrand, medeqdescription, resourceid) values (%s, %s, %s) returning medeqid;"
+        cursor.execute(query, ( medeqbrand, medeqdescription,resourceid,))
         medeqid = cursor.fetchone()[0]
         self.conn.commit()
         return medeqid

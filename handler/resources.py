@@ -5,20 +5,20 @@ from dao.resources import ResourcesDAO
 class ResourceHandler:
     def build_resource_dict(self, row):
         result = {}
-        result['resourceid'] = row[0]
-        result['resourcename'] = row[1]
-        result['resourceprice'] = row[2]
-        result['resourcequantity'] = row[3]
-        result['supplierid'] = row[4]
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
         return result
 
     def build_resource_attributes(self, resourceid, resourcename, resourceprice, resourcequantity, supplierid):
         result = {}
-        result['resourceid'] = resourceid
-        result['resourcename'] = resourcename
-        result['resourceprice'] = resourceprice
-        result['resourcequantity'] = resourcequantity
-        result['supplierid'] = supplierid
+        result['ResourceID'] = resourceid
+        result['ResourceName'] = resourcename
+        result['ResourcePrice'] = resourceprice
+        result['ResourceQuantity'] = resourcequantity
+        result['SupplierID'] = supplierid
         return result
 
     def getAllResources(self):
@@ -133,14 +133,13 @@ class ResourceHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertResourceJson(self, json):
-        resourcename = json['resourcename']
-        resourceprice = json['resourceprice']
-        resourcequantity = json['resourcequantity']
-        supplierid = json['supplierid']
+        resourcename = json['ResourceName']
+        resourceprice = json['ResourcePrice']
+        resourcequantity = json['ResourceQuantity']
+        supplierid = json['SupplierID']
         if resourcename and resourceprice and resourcequantity and supplierid:
             dao = ResourcesDAO()
             resourceid = dao.insert(resourcename, resourceprice, resourcequantity, supplierid)
-            # supplierid = dao.getSupplierByResourceID(resourceid) #duda
             result = self.build_resource_attributes(resourceid, resourcename, resourceprice,
                                                     resourcequantity, supplierid)
             return jsonify(Resource=result), 201

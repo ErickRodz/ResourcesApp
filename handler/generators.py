@@ -91,14 +91,14 @@ class GeneratorsHandler:
             return jsonify(Error="Unexpected attributes in post request")
 
     def insertGeneratorJson(self, json):
-        generatorbrand = json['generatorbrand']
-        generatortype = json['generatortype']
-        generatordescription = json['generatordescription']
-        resourceid = json['resourceid']
+        generatorbrand = json['GeneratorBrand']
+        generatortype = json['GeneratorType']
+        generatordescription = json['GeneratorDescription']
+        resourceid = json['ResourceID']
         if generatorbrand and generatortype and generatordescription and resourceid:
             dao = GeneratorsDAO()
-            generatorid = dao.insert(generatorbrand, generatortype, generatordescription, resourceid,)
-            result = self.build_generators_attributes(generatorid, generatorbrand, generatortype, generatordescription, resourceid,)
+            generatorid = dao.insert(generatorbrand, generatortype, generatordescription, resourceid)
+            result = self.build_generators_attributes(generatorid, generatorbrand, generatortype, generatordescription, resourceid)
             return jsonify(Generator=result), 201
         else:
             return jsonify(Error="Unexpected attributes in post request")
