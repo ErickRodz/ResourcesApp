@@ -79,7 +79,7 @@ class ToolsDAO:
 
     def getToolByResourceID(self, resourceid):
         cursor = self.conn.cursor()
-        query = "select * from Resources natural inner join Tool where resourceid = %s;"
+        query = "select * from Resources natural inner join Tools where resourceid = %s;"
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result

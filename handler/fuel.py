@@ -21,6 +21,19 @@ class FuelHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_fueldetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['FuelID'] = row[5]
+        result['FuelType'] = row[6]
+        result['FuelOctenage'] = row[7]
+        result['FuelDescription'] = row[8]
+        return result
+
     def getAllFuel(self):
         dao = FuelDAO()
         Fuel_list = dao.getAllFuel()
@@ -46,7 +59,7 @@ class FuelHandler:
         if not row:
             return jsonify(Error="Fuel Not Found "), 404
         else:
-            Fuel = self.build_fuel_dict(row)
+            Fuel = self.build_fueldetails_dict(row)
             return jsonify(Fuel=Fuel)
 
     def getResourceIDByFuelID(self, Fuelid):

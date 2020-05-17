@@ -6,17 +6,17 @@ class CategoriesHandler:
     def build_category_dict(self, row):
         result = {}
         result['CategoryID'] = row[0]
-        result['ResourceID'] = row[1]
-        result['CategoryName'] = row[2]
+        result['CategoryName'] = row[1]
+        result['ResourceID'] = row[2]
         result['SupplierID'] = row[3]
         return result
 
     def build_category_attributes(self, categoryid, resourceid, categoryname, supplierid):
         result = {}
         result['CategoryID'] = categoryid
-        result['ResourceID'] = resourceid
         result['CategoryName'] = categoryname
-        result['supplierid'] = supplierid
+        result['ResourceID'] = resourceid
+        result['SupplierID'] = supplierid
         return result
 
     def getAllCategories(self):
@@ -38,14 +38,15 @@ class CategoriesHandler:
             return jsonify(Category=category)
 
     def getCategoryByResourceID(self, resourceid):
-        dao = CategoriesDAO
+        dao = CategoriesDAO()
         row = dao.getCategoryByResourceId(resourceid)
         if not row:
             return jsonify(Error="Category Not Found "), 404
         else:
-            attribute = self.build_category_dict(row)
-            return jsonify(Category=attribute)
-
+            #print(type(row[0]))
+            #attribute = self.build_category_dict(row)
+            #return jsonify(Category=attribute)
+            return row[0]
         # 9 in the Email Part 1
     #def getCategoryNameByResourceID(self, ResourceID):
        # dao = CategoriesDAO

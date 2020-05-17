@@ -18,6 +18,18 @@ class IceHandler:
         result['IceDescription'] = icedescription
         result['ResourceID'] = resourceid
         return result
+
+    def build_icedetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['IceID'] = row[5]
+        result['IceSize'] = row[6]
+        result['IceDescription'] = row[7]
+        return result
     
     def getAllIce(self):
         dao = IceDAO()
@@ -43,7 +55,7 @@ class IceHandler:
         if not row:
             return jsonify(Error="Ice Not Found "), 404
         else:
-            Ice = self.build_ice_dict(row)
+            Ice = self.build_icedetails_dict(row)
             return jsonify(Ice=Ice)
 
     def getResourceIDByIceID(self, Iceid):

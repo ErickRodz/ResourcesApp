@@ -19,6 +19,18 @@ class BabyFoodHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_bfooddetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['BFoodID'] = row[5]
+        result['BFoodServing'] = row[6]
+        result['BFoodDescription'] = row[7]
+        return result
+
     def getAllBabyFood(self):
         dao = BabyFoodDAO()
         babyfood_list = dao.getAllBabyFood()
@@ -43,7 +55,7 @@ class BabyFoodHandler:
         if not row:
             return jsonify(Error="BabyFood Not Found "), 404
         else:
-            bfood = self.build_babyfood_dict(row)
+            bfood = self.build_bfooddetails_dict(row)
             return jsonify(BFood=bfood)
 
     def getResourceIDByBabyFoodID(self, bfoodid):

@@ -5,20 +5,33 @@ from dao.tools import ToolsDAO
 class ToolsHandler:
     def build_tools_dict(self, row):
         result = {}
-        result['toolid'] = row[0]
-        result['toolmaterial'] = row[1]
-        result['toolcolor'] = row[2]
-        result['tooldescription'] = row[3]
-        result['resourceid'] = row[4]
+        result['ToolID'] = row[0]
+        result['ToolMaterial'] = row[1]
+        result['ToolColor'] = row[2]
+        result['ToolDescription'] = row[3]
+        result['ResourceID'] = row[4]
         return result
 
     def build_tools_attributes(self, toolid, toolmaterial, toolcolor, tooldescription, resourceid):
         result = {}
-        result['toolid'] = toolid
-        result['toolmaterial'] = toolmaterial
-        result['toolcolor'] = toolcolor
-        result['tooldescription'] = tooldescription
-        result['resourceid'] = resourceid
+        result['ToolID'] = toolid
+        result['ToolMaterial'] = toolmaterial
+        result['ToolColor'] = toolcolor
+        result['ToolDescription'] = tooldescription
+        result['ResourceID'] = resourceid
+        return result
+
+    def build_toolsdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['ToolID'] = row[5]
+        result['ToolMaterial'] = row[6]
+        result['ToolColor'] = row[7]
+        result['ToolDescription'] = row[8]
         return result
            
     def getAllTools(self):
@@ -45,7 +58,7 @@ class ToolsHandler:
         if not row:
             return jsonify(Error="Tool Not Found "), 404
         else:
-            Tool = self.build_tools_dict(row)
+            Tool = self.build_toolsdetails_dict(row)
             return jsonify(Tool=Tool)
 
     def getResourceIDByToolID(self, Toolid):

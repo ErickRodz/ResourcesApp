@@ -21,6 +21,19 @@ class GeneratorsHandler:
         result['ResourceID'] = ResourceID
         return result
 
+    def build_generatorsdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['GeneratorID'] = row[5]
+        result['GeneratorBrand'] = row[6]
+        result['GeneratorType'] = row[7]
+        result['GeneratorDescription'] = row[8]
+        return result
+
     def getAllGenerators(self):
         dao = GeneratorsDAO()
         generators_list = dao.getAllGenerators()
@@ -45,7 +58,7 @@ class GeneratorsHandler:
         if not row:
             return jsonify(Error="Generators Not Found "), 404
         else:
-            Generators = self.build_generators_dict(row)
+            Generators = self.build_generatorsdetails_dict(row)
             return jsonify(Generators=Generators)
 
     def getResourceIDByGeneratorsID(self, Generatorsid):

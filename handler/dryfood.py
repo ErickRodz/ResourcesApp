@@ -19,6 +19,18 @@ class DryFoodHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_dfooddetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['DFoodID'] = row[5]
+        result['DFoodServing'] = row[6]
+        result['DFoodDescription'] = row[7]
+        return result
+
     def getAllDryFood(self):
         dao = DryFoodDAO()
         dryfood_list = dao.getAllDryFood()
@@ -50,14 +62,14 @@ class DryFoodHandler:
             result = self.build_dryfood_dict(row)
             result_list.append(result)
         return jsonify(dryfood=result_list)
-    
+    #9
     def getDryFoodByResourceID(self, resourceid):
         dao = DryFoodDAO()
         row = dao.getDFoodByResourceID(resourceid)
         if not row:
             return jsonify(Error="DryFood Not Found "), 404
         else:
-            DFood = self.build_dryfood_dict(row)
+            DFood = self.build_dfooddetails_dict(row)
             return jsonify(DFood=DFood)
 
     def getResourceIDByDryFoodID(self, DFoodid):

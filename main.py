@@ -256,7 +256,7 @@ def getAllResourcesOrderedByCategory(ordertype, categoryname):
         return OrdersHandler().getResourcesOrderedByCategory(ordertype, categoryname)
 
 
-# 9
+#9
 @app.route('/ProyectoDB/categories/resources/<int:resourceid>', methods=['GET'])
 def getAllResourceDetails(resourceid):
     categoryname = CategoriesHandler().getCategoryByResourceID(resourceid)
@@ -289,17 +289,17 @@ def getAllResourceDetails(resourceid):
     elif categoryname == "Water":
         return WaterHandler().getWaterByResourceID(resourceid)
 
-    # 11 Part 1
-    @app.route('/ProyectoDB/resources/available/order', methods=['GET'])
-    def getAllResorcesAvailableByResourceName():
-        if request.method == 'GET':
-            return ResourceHandler().getAllResourcesAvailableOrderByResourceName()
+ # 11 Part 1
+@app.route('/ProyectoDB/resources/available/order', methods=['GET'])
+def getAllResorcesAvailableByResourceName():
+    if request.method == 'GET':
+        return ResourceHandler().getAllResourcesAvailableOrderByResourceName()
 
     # 11 Part 2
-    @app.route('/ProyectoDB/', methods=['GET'])
-    def getResorceAvailableByName(resourcename):
-        if request.method == 'GET':
-            return ResourceHandler().getResourceAvailabilityByName(resourcename)
+@app.route('/ProyectoDB/', methods=['GET'])
+def getResorceAvailableByName(resourcename):
+    if request.method == 'GET':
+        return ResourceHandler().getResourceAvailabilityByName(resourcename)
 
     # Phase 3 Stuff
 @app.route('/ProyectoDB/category', methods=['GET', 'POST'])

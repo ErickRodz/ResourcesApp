@@ -1,9 +1,11 @@
 from config.dbconfig import pg_config
 import psycopg2
 
+
 class CategoriesDAO:
     def __init__(self):
-        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1" % (pg_config['dbname'], pg_config['user'], pg_config['passwd'])
+        connection_url = "dbname=%s user=%s password=%s host=127.0.0.1" % (
+        pg_config['dbname'], pg_config['user'], pg_config['passwd'])
         self.conn = psycopg2.connect(connection_url)
 
     def getAllCategories(self):
@@ -22,7 +24,7 @@ class CategoriesDAO:
         result = cursor.fetchone()
         return result
 
-    #duda con el get attribute by resource id con el query, pienso que hay que hacer un join en alguna parte
+    # duda con el get attribute by resource id con el query, pienso que hay que hacer un join en alguna parte
     def getCategoryByResourceId(self, resourceid):
         cursor = self.conn.cursor()
         query = "select categoryname from Categories where resourceid = %s;"
@@ -40,13 +42,13 @@ class CategoriesDAO:
         return result
 
         # 9 in the Email Part 1
-    #def getCategoryNameByResourceID(self, ResourceID):
-     #   cursor = self.conn.cursor()
-      #  query = "select categoryname from Categories where resourceid = %s;"
-       # cursor.execute(query, (ResourceID,))
-        #result = cursor.fetchone()
-        #return result
 
+    # def getCategoryNameByResourceID(self, ResourceID):
+    #   cursor = self.conn.cursor()
+    #  query = "select categoryname from Categories where resourceid = %s;"
+    # cursor.execute(query, (ResourceID,))
+    # result = cursor.fetchone()
+    # return result
 
     def insert(self, resourceid, categoryname, supplierid):
         cursor = self.conn.cursor()
@@ -56,7 +58,7 @@ class CategoriesDAO:
         self.conn.commit()
         return categoryid
 
-    def update(self, categoryid, resourceid, categoryname, supplierid,):
+    def update(self, categoryid, resourceid, categoryname, supplierid, ):
         cursor = self.conn.cursor()
         query = 'update Categories set categoryname = %s where categoryid = %s and resourceid = %s and supplierid = %s;'
         cursor.execute(query, (categoryname, categoryid, resourceid, supplierid,))

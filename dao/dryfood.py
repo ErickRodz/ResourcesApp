@@ -43,7 +43,7 @@ class DryFoodDAO:
 
     def getDFoodByResourceID(self, resourceid):
         cursor = self.conn.cursor()
-        query = "select * from Resources natural inner join Food where resourceid = %s;"
+        query = "select * from Resources natural inner join DryFood where resourceid = %s;"
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result

@@ -19,6 +19,18 @@ class WaterHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_waterdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['WaterID'] = row[5]
+        result['WaterSize'] = row[6]
+        result['WaterDescription'] = row[7]
+        return result
+
     def getAllWater(self):
         dao = WaterDAO()
         water_list = dao.getAllWater()
@@ -43,7 +55,7 @@ class WaterHandler:
         if not row:
             return jsonify(Error="Water Not Found "), 404
         else:
-            Water = self.build_water_dict(row)
+            Water = self.build_waterdetails_dict(row)
             return jsonify(Water=Water)
 
     def getResourceIDByWaterID(self, Waterid):

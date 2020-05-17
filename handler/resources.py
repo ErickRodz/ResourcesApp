@@ -25,7 +25,7 @@ class ResourceHandler:
         dao = ResourcesDAO()
         resources_list = dao.getAllResources()
         result_list = []
-        #resources_list = [0,0,'papel de toilet', 5, 10]
+        # resources_list = [0,0,'papel de toilet', 5, 10]
         for row in resources_list:
             result = self.build_resource_dict(row)
             result_list.append(result)
@@ -82,9 +82,8 @@ class ResourceHandler:
             resource = self.build_resource_dict(row)
             return jsonify(Resource=resource)
 
-
     def getResourceByID(self, resourceid):
-        dao = ResourcesDAO
+        dao = ResourcesDAO()
         row = dao.getResourceById(resourceid)
         if not row:
             return jsonify(Error="Resource Not Found "), 404
@@ -105,7 +104,7 @@ class ResourceHandler:
         elif (len(args) == 1) and supplierid:
             resources_list = dao.getResourcesBySupplier(supplierid)
         elif (len(args) == 1) and attributename:
-            resources_list= dao.getResourcesByAttributeName(attributename)
+            resources_list = dao.getResourcesByAttributeName(attributename)
         else:
             return jsonify(Error="Malformed query string"), 400
         result_list = []
@@ -173,8 +172,3 @@ class ResourceHandler:
                     return jsonify(Resource=result), 400
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400
-
-
-
-
-

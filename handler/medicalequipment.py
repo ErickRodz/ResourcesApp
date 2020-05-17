@@ -18,6 +18,18 @@ class MedicalEquipmentHandler:
         result['MedEqDescription'] = medeqdescription
         result['ResourceID'] = resourceid
         return result
+
+    def build_medicaldetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['MedEqID'] = row[5]
+        result['MedEqBrand'] = row[6]
+        result['MedEqDescription'] = row[7]
+        return result
     
     def getAllMedicalEquipment(self):
         dao = MedicalEquipmentDAO()
@@ -43,7 +55,7 @@ class MedicalEquipmentHandler:
         if not row:
             return jsonify(Error="MedicalEq Not Found "), 404
         else:
-            MedicalEq = self.build_medicalequipment_dict(row)
+            MedicalEq = self.build_medicaldetails_dict(row)
             return jsonify(MedicalEq=MedicalEq)
 
     def getResourceIDByMedicalEqID(self, MedicalEqid):

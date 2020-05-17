@@ -19,6 +19,18 @@ class CannedFoodHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_cfooddetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['CFoodID'] = row[5]
+        result['CFoodServing'] = row[6]
+        result['CFoodDescription'] = row[7]
+        return result
+
     def getAllCannedFood(self):
         dao = CannedFoodDAO()
         cannedfood_list = dao.getAllCannedFood()
@@ -57,7 +69,7 @@ class CannedFoodHandler:
         if not row:
             return jsonify(Error="CannedFood Not Found "), 404
         else:
-            CannedFood = self.build_cannedfood_dict(row)
+            CannedFood = self.build_cfooddetails_dict(row)
             return jsonify(CannedFood=CannedFood)
 
     def getResourceIDByCFoodID(self, CannedFoodid):

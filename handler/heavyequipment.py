@@ -19,6 +19,18 @@ class HeavyEquipmentHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_heavydetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['HeavyEqID'] = row[5]
+        result['HeavyEqBrand'] = row[6]
+        result['HeavyEqDescription'] = row[7]
+        return result
+
     def getAllHeavyEquipment(self):
         dao = HeavyEquipmentDAO()
         HeavyEquipment_list = dao.getAllHeavyEquipment()
@@ -44,7 +56,7 @@ class HeavyEquipmentHandler:
         if not row:
             return jsonify(Error="HeavyEquipment Not Found "), 404
         else:
-            HeavyEquipment = self.build_heavyequipment_dict(row)
+            HeavyEquipment = self.build_heavydetails_dict(row)
             return jsonify(HeavyEquipment=HeavyEquipment)
 
     def getResourceIDByHeavyEquipmentID(self, HeavyEquipmentid):

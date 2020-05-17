@@ -21,6 +21,19 @@ class PartsHandler:
         result['resourceid'] = resourceid
         return result
 
+    def build_partsdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['PartsID'] = row[5]
+        result['PartsMaterial'] = row[6]
+        result['PartsColor'] = row[7]
+        result['PartsDescription'] = row[8]
+        return result
+
     def getAllParts(self):
         dao = PartsDAO()
         Parts_list = dao.getAllParts()
@@ -45,7 +58,7 @@ class PartsHandler:
         if not row:
             return jsonify(Error="Parts Not Found "), 404
         else:
-            Parts = self.build_parts_dict(row)
+            Parts = self.build_partsdetails_dict(row)
             return jsonify(Parts=Parts)
 
     def getResourceIDByPartsID(self, Partsid):

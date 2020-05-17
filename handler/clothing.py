@@ -23,6 +23,20 @@ class ClothingHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_clothingdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['ClothingID'] = row[5]
+        result['ClothingBrand'] = row[6]
+        result['ClothingSize'] = row[7]
+        result['ClothingFabric'] = row[8]
+        result['ClothingDescription'] = row[9]
+        return result
+
     def getAllClothing(self):
         dao = ClothingDAO()
         Clothing_list = dao.getAllClothing()
@@ -62,7 +76,7 @@ class ClothingHandler:
         if not row:
             return jsonify(Error="Clothing Not Found "), 404
         else:
-            Clothing = self.build_clothing_dict(row)
+            Clothing = self.build_clothingdetails_dict(row)
             return jsonify(Clothing=Clothing)
 
     def getResourceIDByClothingID(self, Clothingid):

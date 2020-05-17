@@ -21,6 +21,19 @@ class BatteriesHandler:
         result['ResourceID'] = resourceid
         return result
 
+    def build_batteriesdetails_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['BatteryID'] = row[5]
+        result['BatteryBrand'] = row[6]
+        result['BatteryType'] = row[7]
+        result['BatteryDescription'] = row[8]
+        return result
+
     def getAllBatteries(self):
         dao = BatteriesDAO()
         batteries_list = dao.getAllBatteries()
@@ -60,7 +73,7 @@ class BatteriesHandler:
         if not row:
             return jsonify(Error="Battery Not Found "), 404
         else:
-            Battery = self.build_batteries_dict(row)
+            Battery = self.build_batteriesdetails_dict(row)
             return jsonify(Battery=Battery)
 
     def getResourceIDByBatteryID(self, Batteryid):
