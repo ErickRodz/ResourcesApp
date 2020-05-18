@@ -19,6 +19,7 @@ class CategoriesHandler:
         result['SupplierID'] = supplierid
         return result
 
+
     def getAllCategories(self):
         dao = CategoriesDAO()
         categories_list = dao.getAllCategories()

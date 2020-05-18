@@ -29,6 +29,22 @@ class OrdersHandler:
         result['OrderType'] = ordertype
         return result
 
+    def build_ordersresourcename_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['ResourceName'] = row[1]
+        result['ResourcePrice'] = row[2]
+        result['ResourceQuantity'] = row[3]
+        result['SupplierID'] = row[4]
+        result['OrderID'] = row[5]
+        result['TotalPrice'] = row[6]
+        result['TotalQuantity'] = row[7]
+        result['UserID'] = row[8]
+        result['CardID'] = row[9]
+        result['CartID'] = row[10]
+        result['OrderType'] = row[11]
+        return result
+
     def getAllOrders(self):
         dao = OrdersDAO()
         orders_list = dao.getAllOrders()
@@ -78,7 +94,7 @@ class OrdersHandler:
             result_list.append(result)
 
         return jsonify(Orders=result_list)
-
+    #Unsure what this is for
     def getReciptsByCartIdAndOrderType(self, cartid, ordertype):
         dao = OrdersDAO()
         requests_list = dao.getReceiptsFromOrdersByCartIdAndOrderType(cartid, ordertype)
@@ -89,27 +105,37 @@ class OrdersHandler:
 
         return jsonify(Orders=result_list)
 
-    def getReciptsByUserIdAndOrderType(self, userid, ordertype):
+    def getOrdersByUserIdAndOrderType(self, userid, ordertype):
         dao = OrdersDAO()
-        requests_list = dao.getReceiptsFromOrdersByUserIdAndOrderType(userid, ordertype)
+        orders_list = dao.getOrdersByUserIdAndOrderType(userid, ordertype)
         result_list = []
-        for row in requests_list:
+        for row in orders_list:
             result = self.build_orders_dict(row)
             result_list.append(result)
+        return jsonify(Orders = result_list)
 
-        return jsonify(Orders=result_list)
-
-    def getResourcesOrderedByCategory(self, ordertype, resourcename):
+    #10
+    def getResourcesOrderedByName(self, ordertype, resourcename):
         dao = OrdersDAO()
-        resourceid = dao.getResourceIdByResourceName(resourcename)
-        categoryname = dao.getCategoryNameByResourceId(resourceid)
-        requests_list = dao.getResourcesByOrderType(ordertype, categoryname)
+        requests_list = dao.getResourcesByResourceName(ordertype, resourcename)
         result_list = []
         for row in requests_list:
-            result = self.build_orders_dict(row)
+            result = self.build_ordersresourcename_dict(row)
             result_list.append(result)
-
         return jsonify(Orders=result_list)
+
+    #10.2
+    def getResourceRequestedyByName(self, resourcename):
+        dao = OrdersDAO()
+        resources_list = dao.getResourceRequestedByName(resourcename)
+        if not resources_list:
+            return jsonify(Error="Resource Not Found "), 404
+        else:
+            result_list = []
+            for row in resources_list:
+                result = self.build_orders_dict(row)
+                result_list.append(result)
+            return jsonify(Orders=result_list)
 
     def searchOrders(self, args):
         userid = args.get('userid')
@@ -277,9 +303,6 @@ class OrdersHandler:
                 return jsonify(Order=result), 200
             else:
                 return jsonify(Error="Unexpected attributes in update request"), 400
-
-
-
 
 
 

@@ -99,7 +99,7 @@ class OrdersDAO:
 
     def getRequestsByOrderID(self, OrderID):
         cursor = self.conn.cursor()
-        query = "select * from Orders natural inner join Resources where totalquantity = 0 and totalprice = 0 and orderid = %s;"
+        query = "select * from Orders natural inner join Resources where ordertype = 'Request' and orderid = %s;"
         cursor.execute(query, (OrderID,))
         result =[]
         for row in cursor:
@@ -155,8 +155,8 @@ class OrdersDAO:
          for row in cursor:
              result.append(row)
          return result
-
-    def getReceiptsFromOrdersByUserIdAndOrderType(self, userid, ordertype):
+    #6.2
+    def getOrdersByUserIdAndOrderType(self, userid, ordertype):
          cursor = self.conn.cursor()
          query = "select * from Orders where userid = %s and ordertype = %s;"
          cursor.execute(query, (userid, ordertype,))
@@ -171,11 +171,20 @@ class OrdersDAO:
         cursor.execute(query, (resourceid,))
         result = cursor.fetchone()
         return result
-
-    def getResourcesByOrderType(self, ordertype, categoryname):
+    #10.2
+    def getResourceRequestedByName(self, resourcename):
         cursor = self.conn.cursor()
-        query = "select * from Resources natural inner join Orders natural inner join Categories where ordertype = %s and categoryname = %s order by resourcename;"
-        cursor.execute(query, (ordertype, categoryname,))
+        query = "select * from Orders where resourcename = %s and ordertype = 'request' order by resourcename;"
+        cursor.execute(query, (resourcename,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourcesByResourceName(self, ordertype, resourcename):
+        cursor = self.conn.cursor()
+        query = "select * from Resources natural inner join Orders where ordertype = %s and resourcename = %s order by resourcename;"
+        cursor.execute(query, (ordertype, resourcename,))
         result = []
         for row in cursor:
             result.append(row)

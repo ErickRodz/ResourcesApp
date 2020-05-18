@@ -75,6 +75,15 @@ class ResourcesDAO:
             result.append(row)
         return result
 
+    def getResourceRequestedByName(self, resourcename):
+        cursor = self.conn.cursor()
+        query = "select * from Resources where resourcename = %s and resourceprice = 0 and resourcequantity = 0 order by resourcename;"
+        cursor.execute(query, (resourcename,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def getResourcesAvailable(self):
         cursor = self.conn.cursor()
         query = "select * from Resources where resourcequantity > 0 order by resourcename;"

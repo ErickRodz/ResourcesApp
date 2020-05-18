@@ -139,13 +139,28 @@ def getResourceById(resourceid):
         return jsonify(Error="Method not allowed."), 405
 
 
-# 5 y 8
+#5  Maybe also #8. #11.1 A get for all available resources. Which means we're announcing what's available. IE Number 5
 @app.route('/ProyectoDB/resources/available', methods=['GET'])
-def getAllResorcesAvailable():
+def getAllResourcesAvailable():
     if request.method == 'GET':
         return ResourceHandler().getAllResourcesAvailable()
 
+# 10.1
+@app.route('/ProyectoDB/orders/<string:ordertype>/name/<string:resourcename>', methods=['GET'])
+def getAllResourcesOrderedByName(ordertype, resourcename):
+    # Must make a new class or method that searches the Carts by UserID for obvious reasons.
+    if request.method == 'GET':
+        # No poseido por Satanas. At least, for now.
+        # Commented the working stuff for phase 1
+        return OrdersHandler().getResourcesOrderedByName(ordertype, resourcename)
 
+#10.2
+@app.route('/ProyectoDB/resources/request/<string:resourcename>', methods=['GET'])
+def getResourceRequestedByName(resourcename):
+    if request.method == 'GET':
+        return OrdersHandler().getResourceRequestedyByName(resourcename)
+
+#11.2
 @app.route('/ProyectoDB/resources/available/<string:resourcename>', methods=['GET'])
 def getResourceAvailableByName(resourcename):
     if request.method == 'GET':
@@ -209,7 +224,7 @@ def getAllPaymentMethods():
             return PaymentMethodHandler().searchCards(request.args)
 
 
-# 4
+#4, and #6, #7 Used for Getting Orders(Purchase, Request, Reservations) by ordertype.
 @app.route('/ProyectoDB/orders/<string:ordertype>', methods=['GET'])
 def getOrdersByOrderType(ordertype):
     if request.method == 'GET':
@@ -218,7 +233,7 @@ def getOrdersByOrderType(ordertype):
         return jsonify(Error="Method not allowed"), 405
 
 
-# 7
+#4, #6 as well, and possible #7
 @app.route('/ProyectoDB/orders/request/<int:orderid>', methods=['GET'])
 def getRequestsByOrderID(orderid):
     if request.method == 'GET':
@@ -227,7 +242,7 @@ def getRequestsByOrderID(orderid):
         return jsonify(Error="Method not allowed"), 405
 
 
-# 6
+
 @app.route('/ProyectoDB/orders/<int:cartid>/<string:ordertype>', methods=['GET'])
 def getAllRequestsByCartIdAndOrderType(cartid, ordertype):
     # Must make a new class or method that searches the Carts by UserID for obvious reasons.
@@ -236,24 +251,14 @@ def getAllRequestsByCartIdAndOrderType(cartid, ordertype):
         # Commented the working stuff for phase 1
         return OrdersHandler().getReciptsByCartIdAndOrderType(cartid, ordertype)
 
-
-@app.route('/ProyectoDB/orders/<int:userid>/<string:ordertype>', methods=['GET'])
-def getAllRequestsByUserIdAndOrderType(userid, ordertype):
+#6.2. The ability to get all Reservation/Request/Purchases, by Ordertype,
+@app.route('/ProyectoDB/orders/<int:userid>/type/<string:ordertype>', methods=['GET'])
+def getAllOrdersByUserIdAndOrderType(userid, ordertype):
     # Must make a new class or method that searches the Carts by UserID for obvious reasons.
     if request.method == 'GET':
         # No poseido por Satanas. At least, for now.
         # Commented the working stuff for phase 1
-        return OrdersHandler().getReciptsByUserIdAndOrderType(userid, ordertype)
-
-
-# 10
-@app.route('/ProyectoDB/orders/<string:ordertype>/<string:categoryname>', methods=['GET'])
-def getAllResourcesOrderedByCategory(ordertype, categoryname):
-    # Must make a new class or method that searches the Carts by UserID for obvious reasons.
-    if request.method == 'GET':
-        # No poseido por Satanas. At least, for now.
-        # Commented the working stuff for phase 1
-        return OrdersHandler().getResourcesOrderedByCategory(ordertype, categoryname)
+        return OrdersHandler().getOrdersByUserIdAndOrderType(userid, ordertype)
 
 
 #9
@@ -289,9 +294,9 @@ def getAllResourceDetails(resourceid):
     elif categoryname == "Water":
         return WaterHandler().getWaterByResourceID(resourceid)
 
- # 11 Part 1
+ # 11 Part 2
 @app.route('/ProyectoDB/resources/available/order', methods=['GET'])
-def getAllResorcesAvailableByResourceName():
+def getResourceAvailableByResourceName():
     if request.method == 'GET':
         return ResourceHandler().getAllResourcesAvailableOrderByResourceName()
 
@@ -467,7 +472,7 @@ def getAllGenerators():
         else:
             return GeneratorsHandler().searcGenerators(request.args)
 
-
+#Order Post, and Get of all Orders(Request, Purchase and Reservation alik)
 @app.route('/ProyectoDB/orders', methods=['GET', 'POST'])
 def getAllOrders():
     if request.method == 'POST':
@@ -479,6 +484,18 @@ def getAllOrders():
         else:
             return OrdersHandler().searchOrders(request.args)
 
+#Get for Request, Reservation, and Purchase via OrderID
+@app.route('/ProyectoDB/orders/<int:orderid>',
+           methods=['GET', 'PUT', 'DELETE'])
+def getOrdersById(orderid):
+    if request.method == 'GET':
+        return OrdersHandler().getOrdersByID(orderid)
+    elif request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 if __name__ == "__main__":
     app.run()
