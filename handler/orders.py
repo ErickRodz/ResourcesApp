@@ -32,17 +32,19 @@ class OrdersHandler:
     def build_ordersresourcename_dict(self, row):
         result = {}
         result['ResourceID'] = row[0]
-        result['ResourceName'] = row[1]
-        result['ResourcePrice'] = row[2]
-        result['ResourceQuantity'] = row[3]
-        result['SupplierID'] = row[4]
-        result['OrderID'] = row[5]
-        result['TotalPrice'] = row[6]
-        result['TotalQuantity'] = row[7]
-        result['UserID'] = row[8]
-        result['CardID'] = row[9]
-        result['CartID'] = row[10]
-        result['OrderType'] = row[11]
+        result['SupplierID'] = row[1]
+        result['ResourceName'] = row[2]
+        result['OrderID'] = row[3]
+        result['TotalPrice'] = row[4]
+        result['TotalQuantity'] = row[5]
+        result['UserID'] = row[6]
+        result['CardID'] = row[7]
+        result['CartID'] = row[8]
+        result['OrderType'] = row[9]
+        result['ResourcePrice'] = row[10]
+        result['ResourceQuantity'] = row[11]
+        result['CategoryID'] = row[12]
+        result['CategoryName'] = row[13]
         return result
 
     def getAllOrders(self):
@@ -115,9 +117,9 @@ class OrdersHandler:
         return jsonify(Orders = result_list)
 
     #10
-    def getResourcesOrderedByName(self, ordertype, resourcename):
+    def getResourcesOrderedByResourceNameandOrderType(self, ordertype, categoryname):
         dao = OrdersDAO()
-        requests_list = dao.getResourcesByResourceName(ordertype, resourcename)
+        requests_list = dao.getResourcesOrderedByResourceName(ordertype, categoryname)
         result_list = []
         for row in requests_list:
             result = self.build_ordersresourcename_dict(row)

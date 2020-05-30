@@ -180,11 +180,11 @@ class OrdersDAO:
         for row in cursor:
             result.append(row)
         return result
-
-    def getResourcesByResourceName(self, ordertype, resourcename):
+    #10
+    def getResourcesOrderedByResourceName(self, ordertype, categoryname):
         cursor = self.conn.cursor()
-        query = "select * from Resources natural inner join Orders where ordertype = %s and resourcename = %s order by resourcename;"
-        cursor.execute(query, (ordertype, resourcename,))
+        query = "select * from orders natural inner join resources natural inner join categories where ordertype = %s and categoryname = %s order by resourcename;"
+        cursor.execute(query, (ordertype, categoryname,))
         result = []
         for row in cursor:
             result.append(row)

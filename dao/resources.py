@@ -66,10 +66,10 @@ class ResourcesDAO:
             result.append(row)
         return result
 
-    def getResourceAvailabilityByName(self, resourcename):
+    def getResourceAvailableByCatName(self, categoryname):
         cursor = self.conn.cursor()
-        query = "select * from Resources where resourcename = %s and resourcequantity > 0 order by resourcename;"
-        cursor.execute(query, (resourcename,))
+        query = "select * from Resources natural inner join Categories where categoryname = %s and resourcequantity > 0 order by resourcename;"
+        cursor.execute(query, (categoryname,))
         result = []
         for row in cursor:
             result.append(row)

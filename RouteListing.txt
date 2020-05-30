@@ -1,0 +1,91 @@
+LocalHost URL is 
+localhost:5000/ProyectoDB/
+
+Heroku URL is
+
+#Get for all Users, and Post for all Users also #2 for the 2nd Happy Hour (get of all Users as well as Post for 3rd)
+/ProyectoDB/users
+
+#GetID for Users, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/users/<int:userid>
+
+#Get for all Suppliers and Post for all Suppliers. Also #3 for 2d happy hour(and get of all Suppliers for 3rd)
+/ProyectoDB/suppliers
+
+#GetID for Suppliers, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/suppliers/<int:supplierid>
+
+#Get for All Admins and Post for all Admins. Also #1 in 2nd happy hour (and the post for 3rd)
+/ProyectoDB/administrator
+
+
+#GetID for Administrators, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/administrator/<int:administratorid>
+
+/ProyectoDB/usercart
+
+/ProyectoDB/bank
+
+/ProyectoDB/payment
+
+/ProyectoDB/category
+
+/ProyectoDB/cannedfood
+
+/ProyectoDB/babyfood
+
+/ProyectoDB/dryfood
+
+/ProyectoDB/water
+
+/ProyectoDB/batteries
+
+/ProyectoDB/ice
+
+/ProyectoDB/parts
+
+/ProyectoDB/tools
+
+/ProyectoDB/clothing
+
+/ProyectoDB/fuel
+
+/ProyectoDB/medication
+
+/ProyectoDB/medequip
+
+/ProyectoDB/heavyequip
+
+/ProyectoDB/generators
+
+/ProyectoDB/orders
+
+/ProyectoDB/resources/<int:resourceid>
+
+#Get by OrderID for all orders. Can be used, and likely will be used, in the bottom half of this document.
+/ProyectoDB/orders/<int:orderid>
+
+Special Gets
+#4, #6 and #7, Get to see a Order (Re, Res, or Pur) via ordertype
+/ProyectoDB/orders/<string:ordertype> 
+
+#4, #6, #7. Getting Requests by Orderid(GetID by order ID, the regular one, also works)
+/ProyectoDB/orders/request/<int:orderid>
+
+##Check if there is code for getting Pur and Res by orderID
+
+#6.2. Getting list of Re, Res or Pur by UserID, which is to say. Getting all Orders of a particular type for said user
+/ProyectoDB/orders/<int:userid>/type/<string:ordertype>
+
+#5, #8 : #5 = Get of all available resources, #8=Announce availability (same thing, check if its available, ask th chat in case),
+/ProyectoDB/resources/available'
+
+#9, Get by ID of a resource ith all of its potetial information. 
+/ProyectoDB/categories/resources/<int:resourceid>
+
+#10 Get Resources by CategoryName and OrderType, Ordered by ResourceName
+/ProyectoDB/orders/<string:ordertype>/type/<string:categoryename>
+
+#11 Get ResourcesAvailable by CategoryName
+localhost:5000/ProyectoDB/resources/available/<string:categoryname>
+

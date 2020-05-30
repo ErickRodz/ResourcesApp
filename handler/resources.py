@@ -21,6 +21,17 @@ class ResourceHandler:
         result['SupplierID'] = supplierid
         return result
 
+    def build_resourcecatname_dict(self, row):
+        result = {}
+        result['ResourceID'] = row[0]
+        result['SupplierID'] = row[1]
+        result['ResourceName'] = row[2]
+        result['ResourcePrice'] = row[3]
+        result['ResourceQuantity'] = row[4]
+        result['CategoryID'] = row[5]
+        result['CategoryName'] = row[6]
+        return result
+
     def getAllResources(self):
         dao = ResourcesDAO()
         resources_list = dao.getAllResources()
@@ -61,15 +72,15 @@ class ResourceHandler:
             resource = self.build_resource_dict(row)
             return jsonify(Resource=resource)
 
-    def getResourceAvailabilityByName(self, resourcename):
+    def getResourceAvailableByCatName(self, categoryname):
         dao = ResourcesDAO()
-        resources_list = dao.getResourceAvailabilityByName(resourcename)
+        resources_list = dao.getResourceAvailableByCatName(categoryname)
         if not resources_list:
             return jsonify(Error="Resource Not Found "), 404
         else:
             result_list = []
             for row in resources_list:
-                result = self.build_resource_dict(row)
+                result = self.build_resourcecatname_dict(row)
                 result_list.append(result)
             return jsonify(Resources=result_list)
 
