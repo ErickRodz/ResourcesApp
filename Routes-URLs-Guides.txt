@@ -22,17 +22,40 @@ http://disaster-relief-resources-app.herokuapp.com/
 #GetID for Administrators, Delete (unimplemented), or Updates(Partially implemented)
 /ProyectoDB/administrator/<int:administratorid>
 
-#GetAll and Post for UserCart. Subtable of the resource table.
+#GetAll and Post for UserCart.
 /ProyectoDB/usercart
 
-#GetAll and Post for Bank. Subtable of the resource table.
-/ProyectoDB/bank
+#GetbyID for UserCart. Delete nd Update unimplemented.
+/ProyectoDB/usercart/<int:cartid>
 
 #GetAll and Post for PaymentMethod. Subtable of the resource table.
 /ProyectoDB/payment
 
-#GetAll and Post for Categories. Subtable of the resource table.
+#GetbyID for Payment. Delete nd Update unimplemented.
+/ProyectoDB/payment/<int:cardid>
+
+#GetAll and Post for Categories.
 /ProyectoDB/category
+
+#GetbyID for Categories. Delete and Update unimplemented.
+/ProyectoDB/category/<int:categoryid>
+
+#Get all and post for orders. Formt for Post in Postman
+/ProyectoDB/orders
+
+#Get by OrderID for all orders. Can be used, and likely will be used, in the bottom half of this document.
+/ProyectoDB/orders/<int:orderid>
+
+#GetAll and Post for Resources
+/ProyectoDB/resources
+
+#GetbyID for Resources. Update and Delete unimplemented.
+/ProyectoDB/resources/<int:resourceid>
+
+----------------------------------------------------------Sub Tables---------------------------------------------
+
+#GetAll and Post for Bank. Subtable of the resource table.
+/ProyectoDB/bank
 
 #GetAll and Post for CannedFood. Subtable of the resource table.
 /ProyectoDB/cannedfood
@@ -75,14 +98,6 @@ http://disaster-relief-resources-app.herokuapp.com/
 
 #GetAll and Post for Generators. Subtable of the resource table.
 /ProyectoDB/generators
-
-#Get all and post for orders. Formt for Post in Postman
-/ProyectoDB/orders
-
-/ProyectoDB/resources/<int:resourceid>
-
-#Get by OrderID for all orders. Can be used, and likely will be used, in the bottom half of this document.
-/ProyectoDB/orders/<int:orderid>
 
 ----------------------------------------------------------------------------------------------------
 
