@@ -31,16 +31,8 @@ http://disaster-relief-resources-app.herokuapp.com/
 #GetAll and Post for PaymentMethod. Subtable of the resource table.
 /ProyectoDB/payment
 
-#Not working for stange reasons
-#GetbyID for Payment. Delete nd Update unimplemented.
-/ProyectoDB/payment/<int:cardid>
-
 #GetAll and Post for Categories.
 /ProyectoDB/category
-
-#Not working for strange reasons
-#GetbyID for Categories. Delete and Update unimplemented.
-/ProyectoDB/category/<int:categoryid>
 
 #Get all and post for orders. Formt for Post in Postman
 /ProyectoDB/orders
