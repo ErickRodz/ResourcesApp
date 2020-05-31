@@ -19,7 +19,7 @@ class CategoriesDAO:
 
     def getCategoryById(self, categoryid):
         cursor = self.conn.cursor()
-        query = "select * from Categories where cattegoryid = %s;"
+        query = "select * from Categories where categoryid = %s;"
         cursor.execute(query, (categoryid,))
         result = cursor.fetchone()
         return result

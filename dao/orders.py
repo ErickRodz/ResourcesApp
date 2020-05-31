@@ -97,10 +97,10 @@ class OrdersDAO:
         result = cursor.fetchone()
         return result
 
-    def getRequestsByOrderID(self, OrderID):
+    def getRequestsByOrderID(self, OrderType, OrderID):
         cursor = self.conn.cursor()
-        query = "select * from Orders natural inner join Resources where ordertype = 'Request' and orderid = %s;"
-        cursor.execute(query, (OrderID,))
+        query = "select * from Orders natural inner join Resources where ordertype = %s and orderid = %s;"
+        cursor.execute(query, (OrderType, OrderID,))
         result =[]
         for row in cursor:
             result.append(row)

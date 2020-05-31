@@ -77,9 +77,9 @@ class OrdersHandler:
 
         return jsonify(Orders=result_list)
 
-    def getRequestByOrderID(self, orderid):
+    def getRequestByOrderID(self, ordertype, orderid):
         dao = OrdersDAO()
-        request_list = dao.getRequestsByOrderID(orderid)
+        request_list = dao.getRequestsByOrderID(ordertype, orderid)
         result_list = []
         for row in request_list:
             result = self.build_orders_dict(row)

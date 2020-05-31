@@ -30,7 +30,7 @@ class CategoriesHandler:
         return jsonify(Attributes=result_list)
 
     def getCategoryByID(self, categoryid):
-        dao = CategoriesDAO
+        dao = CategoriesDAO()
         row = dao.getCategoryById(categoryid)
         if not row:
             return jsonify(Error="Category Not Found "), 404

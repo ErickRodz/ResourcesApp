@@ -125,6 +125,17 @@ def getAllResources():
         else:
             return ResourceHandler().searchResources(request.args)
 
+@app.route('/ProyectoDB/resources/<int:resourceid>', methods=['GET', 'PUT', 'DELETE'])
+def getResourceById(resourceid):
+    if request.method == 'GET':
+        return ResourceHandler().getResourceByID(resourceid)
+    elif request.method == 'PUT':
+        return ResourceHandler().updateResource(resourceid, request.form)
+    elif request.method == 'DELETE':
+        return ResourceHandler().deleteResource(resourceid)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
 @app.route('/ProyectoDB/usercart', methods=['GET', 'POST'])
 def getAllCarts():
     if request.method == 'POST':
@@ -137,6 +148,17 @@ def getAllCarts():
             return UserCartHandler().getAllCarts()
         else:
             return UserCartHandler().searchUserCarts(request.args)
+
+@app.route('/ProyectoDB/usercart/<int:cartid>', methods=['GET', 'PUT', 'DELETE'])
+def getCartById(cartid):
+    if request.method == 'GET':
+        return UserCartHandler().getCartById(cartid)
+    elif request.method == 'PUT':
+        return UserCartHandler().updateCartJson(cartid, request.json)
+    elif request.method == 'DELETE':
+        return UserCartHandler().deleteCart(cartid)
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 @app.route('/ProyectoDB/bank', methods=['GET', 'POST'])
 def getAllBanks():
@@ -164,6 +186,17 @@ def getAllPaymentMethods():
             return PaymentMethodHandler().getAllCards()
         else:
             return PaymentMethodHandler().searchCards(request.args)
+#Not working for some reason
+@app.route('/ProyectoDB/payment/<int:cardid>', methods=['GET', 'PUT', 'DELETE'])
+def getCardById(cardid):
+    if request.method == 'GET':
+        return PaymentMethodHandler.getCardById(cardid)
+    elif request.method == 'PUT':
+       pass
+    elif request.method == 'DELETE':
+        pass
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 @app.route('/ProyectoDB/category', methods=['GET', 'POST'])
 def getAllCategories():
@@ -175,6 +208,17 @@ def getAllCategories():
             return CategoriesHandler().getAllCategories()
         else:
             return CategoriesHandler().searchCategories(request.args)
+#Not working for some reason (missing caterogy id for some reason?)
+@app.route('/ProyectoDB/category/<int:categoryid>', methods=['GET', 'PUT', 'DELETE'])
+def getCatById(categoryid):
+    if request.method == 'GET':
+        return CategoriesHandler.getCategoryByID(categoryid)
+    elif request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 @app.route('/ProyectoDB/cannedfood', methods=['GET', 'POST'])
 def getAllCFood():
@@ -342,17 +386,18 @@ def getAllOrders():
         else:
             return OrdersHandler().searchOrders(request.args)
 
-#From this point onwards is peculiar information. From this point upwards, its posts and basic gets
-@app.route('/ProyectoDB/resources/<int:resourceid>', methods=['GET', 'PUT', 'DELETE'])
-def getResourceById(resourceid):
+@app.route('/ProyectoDB/orders/<int:orderid>',methods=['GET', 'PUT', 'DELETE'])
+def getOrdersById(orderid):
     if request.method == 'GET':
-        return ResourceHandler().getResourceByID(resourceid)
+        return OrdersHandler().getOrdersByID(orderid)
     elif request.method == 'PUT':
-        return ResourceHandler().updateResource(resourceid, request.form)
+        pass
     elif request.method == 'DELETE':
-        return ResourceHandler().deleteResource(resourceid)
+        pass
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Method not allowed"), 405
+
+#From this point onwards is peculiar information. From this point upwards, its posts and basic gets
 
 #Special Gets
 #5  Maybe also #8. #11.1 A get for all available resources. Which means we're announcing what's available. IE Number 5
@@ -383,19 +428,6 @@ def getResourceAvailableByCatName(categoryname):
   #      return OrdersHandler().getResourceRequestedyByName(resourcename)
 
 
-
-@app.route('/ProyectoDB/usercart/<int:cartid>', methods=['GET', 'PUT', 'DELETE'])
-def getCartById(cartid):
-    if request.method == 'GET':
-        return UserCartHandler().getCartById(cartid)
-    elif request.method == 'PUT':
-        return UserCartHandler().updateCartJson(cartid, request.json)
-    elif request.method == 'DELETE':
-        return UserCartHandler().deleteCart(cartid)
-    else:
-        return jsonify(Error="Method not allowed."), 405
-
-
 # Must make a new class or method that searches the Carts by UserID for obvious reasons.
 
 
@@ -409,10 +441,10 @@ def getOrdersByOrderType(ordertype):
 
 
 #4, #6 as well, and possible #7
-@app.route('/ProyectoDB/orders/request/<int:orderid>', methods=['GET'])
-def getRequestsByOrderID(orderid):
+@app.route('/ProyectoDB/orders/<string:ordertype>/<int:orderid>', methods=['GET'])
+def getRequestsByOrderID(ordertype, orderid):
     if request.method == 'GET':
-        return OrdersHandler().getRequestByOrderID(orderid)
+        return OrdersHandler().getRequestByOrderID(ordertype, orderid)
     else:
         return jsonify(Error="Method not allowed"), 405
 
@@ -469,32 +501,17 @@ def getAllResourceDetails(resourceid):
     elif categoryname == "Water":
         return WaterHandler().getWaterByResourceID(resourceid)
 
- # 11 Part 2
-@app.route('/ProyectoDB/resources/available/order', methods=['GET'])
-def getResourceAvailableByResourceName():
-    if request.method == 'GET':
-        return ResourceHandler().getAllResourcesAvailableOrderByResourceName()
+#@app.route('/ProyectoDB/resources/available/order', methods=['GET'])
+#def getResourceAvailableByResourceName():
+ #   if request.method == 'GET':
+#        return ResourceHandler().getAllResourcesAvailableOrderByResourceName()
 
-    # 11 Part 2
-@app.route('/ProyectoDB/', methods=['GET'])
-def getResorceAvailableByName(resourcename):
-    if request.method == 'GET':
-        return ResourceHandler().getResourceAvailabilityByName(resourcename)
+#@app.route('/ProyectoDB/', methods=['GET'])
+#def getResorceAvailableByName(resourcename):
+#    if request.method == 'GET':
+#        return ResourceHandler().getResourceAvailabilityByName(resourcename)
 
     # Phase 3 Stuff
-
-
-#Get for Request, Reservation, and Purchase via OrderID
-@app.route('/ProyectoDB/orders/<int:orderid>',methods=['GET', 'PUT', 'DELETE'])
-def getOrdersById(orderid):
-    if request.method == 'GET':
-        return OrdersHandler().getOrdersByID(orderid)
-    elif request.method == 'PUT':
-        pass
-    elif request.method == 'DELETE':
-        pass
-    else:
-        return jsonify(Error="Method not allowed"), 405
 
 if __name__ == "__main__":
     app.run()

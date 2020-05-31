@@ -17,7 +17,7 @@ class SuppliersDAO:
 
     def getSupplierById(self, SupplierID):
         cursor = self.conn.cursor()
-        query = "select * from Suppliers; where supplierid = %s;"
+        query = "select * from Suppliers where supplierid = %s;"
         cursor.execute(query, (SupplierID,))
         result = cursor.fetchone()
         return result
