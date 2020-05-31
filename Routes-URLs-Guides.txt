@@ -31,12 +31,14 @@ http://disaster-relief-resources-app.herokuapp.com/
 #GetAll and Post for PaymentMethod. Subtable of the resource table.
 /ProyectoDB/payment
 
+#Not working for stange reasons
 #GetbyID for Payment. Delete nd Update unimplemented.
 /ProyectoDB/payment/<int:cardid>
 
 #GetAll and Post for Categories.
 /ProyectoDB/category
 
+#Not working for strange reasons
 #GetbyID for Categories. Delete and Update unimplemented.
 /ProyectoDB/category/<int:categoryid>
 
@@ -106,15 +108,13 @@ Special Gets
 /ProyectoDB/orders/<string:ordertype> 
 
 #4, #6, #7. Getting Requests by Orderid(GetID by order ID, the regular one, also works)
-/ProyectoDB/orders/request/<int:orderid>
-
-##Check if there is code for getting Pur and Res by orderID
+/ProyectoDB/orders/<string:ordertype>/<int:orderid>
 
 #6.2. Getting list of Re, Res or Pur by UserID, which is to say. Getting all Orders of a particular type for said user
 /ProyectoDB/orders/<int:userid>/type/<string:ordertype>
 
 #5, #8 : #5 = Get of all available resources, #8=Announce availability (same thing, check if its available, ask th chat in case),
-/ProyectoDB/resources/available'
+/ProyectoDB/resources/available
 
 #9, Get by ID of a resource ith all of its potetial information. 
 /ProyectoDB/categories/resources/<int:resourceid>
