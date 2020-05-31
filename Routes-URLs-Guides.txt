@@ -1,0 +1,146 @@
+LocalHost URL is 
+localhost:5000/ProyectoDB/
+
+Heroku URL is
+http://disaster-relief-resources-app.herokuapp.com/
+
+#Get for all Users, and Post for all Users also #2 for the 2nd Happy Hour (get of all Users as well as Post for 3rd)
+/ProyectoDB/users
+
+#GetID for Users, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/users/<int:userid>
+
+#Get for all Suppliers and Post for all Suppliers. Also #3 for 2d happy hour(and get of all Suppliers for 3rd)
+/ProyectoDB/suppliers
+
+#GetID for Suppliers, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/suppliers/<int:supplierid>
+
+#Get for All Admins and Post for all Admins. Also #1 in 2nd happy hour (and the post for 3rd)
+/ProyectoDB/administrator
+
+#GetID for Administrators, Delete (unimplemented), or Updates(Partially implemented)
+/ProyectoDB/administrator/<int:administratorid>
+
+#GetAll and Post for UserCart. Subtable of the resource table.
+/ProyectoDB/usercart
+
+#GetAll and Post for Bank. Subtable of the resource table.
+/ProyectoDB/bank
+
+#GetAll and Post for PaymentMethod. Subtable of the resource table.
+/ProyectoDB/payment
+
+#GetAll and Post for Categories. Subtable of the resource table.
+/ProyectoDB/category
+
+#GetAll and Post for CannedFood. Subtable of the resource table.
+/ProyectoDB/cannedfood
+
+#GetAll and Post for BabyFood. Subtable of the resource table.
+/ProyectoDB/babyfood
+
+#GetAll and Post for DryFood. Subtable of the resource table.
+/ProyectoDB/dryfood
+
+#GetAll and Post for Water. Subtable of the resource table.
+/ProyectoDB/water
+
+#GetAll and Post for Batteries. Subtable of the resource table.
+/ProyectoDB/batteries
+
+#GetAll and Post for Ice. Subtable of the resource table.
+/ProyectoDB/ice
+
+#GetAll and Post for Parts. Subtable of the resource table.
+/ProyectoDB/parts
+
+#GetAll and Post for Tools. Subtable of the resource table.
+/ProyectoDB/tools
+
+#GetAll and Post for Clothing. Subtable of the resource table.
+/ProyectoDB/clothing
+
+#GetAll and Post for Fuel. Subtable of the resource table.
+/ProyectoDB/fuel
+
+#GetAll and Post for Medication. Subtable of the resource table.
+/ProyectoDB/medication
+
+#GetAll and Post for MedE. Subtable of the resource table.
+/ProyectoDB/medequip
+
+#GetAll and Post for HeavyE. Subtable of the resource table.
+/ProyectoDB/heavyequip
+
+#GetAll and Post for Generators. Subtable of the resource table.
+/ProyectoDB/generators
+
+#Get all and post for orders. Formt for Post in Postman
+/ProyectoDB/orders
+
+/ProyectoDB/resources/<int:resourceid>
+
+#Get by OrderID for all orders. Can be used, and likely will be used, in the bottom half of this document.
+/ProyectoDB/orders/<int:orderid>
+
+----------------------------------------------------------------------------------------------------
+
+Special Gets
+#4, #6 and #7, Get to see a Order (Re, Res, or Pur) via ordertype
+/ProyectoDB/orders/<string:ordertype> 
+
+#4, #6, #7. Getting Requests by Orderid(GetID by order ID, the regular one, also works)
+/ProyectoDB/orders/request/<int:orderid>
+
+##Check if there is code for getting Pur and Res by orderID
+
+#6.2. Getting list of Re, Res or Pur by UserID, which is to say. Getting all Orders of a particular type for said user
+/ProyectoDB/orders/<int:userid>/type/<string:ordertype>
+
+#5, #8 : #5 = Get of all available resources, #8=Announce availability (same thing, check if its available, ask th chat in case),
+/ProyectoDB/resources/available'
+
+#9, Get by ID of a resource ith all of its potetial information. 
+/ProyectoDB/categories/resources/<int:resourceid>
+
+#10 Get Resources by CategoryName and OrderType, Ordered by ResourceName
+/ProyectoDB/orders/<string:ordertype>/type/<string:categoryename>
+
+#11 Get ResourcesAvailable by CategoryName
+localhost:5000/ProyectoDB/resources/available/<string:categoryname>
+
+------------------------------------------------------------------------------
+
+List of Things posts done in certain orders (how inserts work to avoid confusion)
+
+Users-> PaymentMethod -> Bank
+
+UserCart (Depends on the Resource Existing, and the User Existing)
+
+Administrators (Simply create one)
+
+Suppliers -> Resource -> Categories -> CategorySubtable for said Resource (If the Resource is Water, and it CategoryName is Water, then we push into the Water table)
+
+Orders (Needs to have All of the above to work. Since it takes all the information that is pivotal to follow said data back to its source, etc. )
+
+-----------------------------------------------------------------------------
+
+Small tests that can be made to ensure that all works. 
+
+Create User, Supplier, Administrator. Follow formats. 
+
+Create PaymenMethod, Bank, and a Resource. 
+
+Create a Category, then insert into the SubCat tables. 
+
+Make sure to do get All's or getID's for the past information to assure that it has been added.
+
+Create a Order, with all prior information. Format as seen in DB. 
+
+Do gets (basic All's or ID's) to find information, remember it. 
+
+Then run the special gets Manuel has mentioned, and all the previous gets with the new entry to assure that all works. 
+
+
+
