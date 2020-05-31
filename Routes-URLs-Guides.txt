@@ -151,7 +151,7 @@ Create a Category, then insert into the SubCat tables.
 
 Make sure to do get All's or getID's for the past information to assure that it has been added.
 
-Create a Order, with all prior information. Format as seen in DB. 
+Create a Usercart, then Order, with all prior information. Format as seen in DB. 
 
 Do gets (basic All's or ID's) to find information, remember it. 
 
