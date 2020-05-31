@@ -7,5 +7,5 @@ Attributes, Resources DAO and HANDLERS made by Jean P. and Christopher R.
 
 ReservationLog and PaymentLog made by Erick R., Jean P. and Christopher R.
 
-Webpage baselines made by Erick R. (Current color scheme is white with blue accents. Soothing). 
-Not in th Github yet, nor implemented. 
+URL for Heroku Use is as follows, followed by all the routes named in RouteListing (save for those tagged as flawed)
+http://disaster-relief-resources-app.herokuapp.com/
